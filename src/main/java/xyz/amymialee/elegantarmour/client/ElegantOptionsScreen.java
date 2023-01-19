@@ -39,7 +39,7 @@ public class ElegantOptionsScreen extends GameOptionsScreen {
         i += 1;
         for (ElegantClientSettings elegantSetting : ElegantClientSettings.values()) {
             this.addDrawableChild(CyclingButtonWidget.onOffBuilder(ElegantClientSettings.isElegantPartEnabled(elegantSetting)).build(
-                    this.width / 2 - 155 + i % 2 * 160 + (elegantSetting.getId() == 6 ? 80 : 0), this.height / 6 + 24 * (i >> 1), 150, 20, elegantSetting.getOptionName(),
+                    this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), 150, 20, elegantSetting.getOptionName(),
                     (button, enabled) -> ElegantClientSettings.toggleElegantPart(elegantSetting, enabled)));
             i++;
         }

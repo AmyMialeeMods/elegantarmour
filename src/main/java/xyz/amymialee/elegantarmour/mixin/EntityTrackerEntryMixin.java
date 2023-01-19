@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.ClientSettingsC2SPacket;
 import net.minecraft.network.packet.s2c.play.EntityEquipmentUpdateS2CPacket;
@@ -22,14 +23,16 @@ import xyz.amymialee.elegantarmour.ElegantArmour;
 import xyz.amymialee.elegantarmour.config.ElegantPart;
 import xyz.amymialee.elegantarmour.util.IEleganttable;
 
+import java.util.function.Consumer;
+
 @Mixin(EntityTrackerEntry.class)
 public class EntityTrackerEntryMixin {
     @Shadow @Final private Entity entity;
-
     @Shadow private int lastHeadPitch;
+    @Shadow @Final private Consumer<Packet<?>> receiver;
 
-    @Inject(method = "startTracking", at = @At("TAIL"))
-    private void elegantArmour$trackEntity(ServerPlayerEntity player, CallbackInfo ci) {
+    @Inject(method = "syncEntityData", at = @At("TAIL"))
+    private void elegantArmour$trackEntity(CallbackInfo ci) {
         if (this.entity.isRemoved()) {
             return;
         }
@@ -41,7 +44,7 @@ public class EntityTrackerEntryMixin {
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeInt(this.entity.getId());
             buf.writeByte(i);
-            ServerPlayNetworking.send(player, ElegantArmour.elegantS2C, buf);
+            this.receiver.accept(ServerPlayNetworking.createS2CPacket(ElegantArmour.elegantS2C, buf));
         }
     }
 }

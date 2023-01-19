@@ -15,7 +15,8 @@ public enum ElegantClientSettings {
     HIDE_OTHERS_HELMET(3, "hideOthersHelmet"),
     HIDE_OTHERS_ELYTRA(4, "hideOthersElytra"),
     HIDE_OTHERS_HEAD_ITEM(5, "hideOthersHeadItem"),
-    EVERYONE_THIN_ARMOUR(6, "everyoneThinArmour");
+    EVERYONE_THIN_ARMOUR(6, "everyoneThinArmour"),
+    ENFORCE_SETTINGS(7, "enforceSettings");
 
     public static final Set<ElegantClientSettings> ENABLED_ELEGANT_SETTINGS = EnumSet.noneOf(ElegantClientSettings.class);
     private final int id;

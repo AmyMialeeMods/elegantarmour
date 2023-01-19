@@ -3,7 +3,6 @@ package xyz.amymialee.elegantarmour.compat;
 import com.unascribed.ears.api.EarsStateType;
 import com.unascribed.ears.api.OverrideResult;
 import com.unascribed.ears.api.registry.EarsStateOverriderRegistry;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EquipmentSlot;
 import xyz.amymialee.elegantarmour.config.ElegantClientSettings;
 import xyz.amymialee.elegantarmour.util.IEleganttable;

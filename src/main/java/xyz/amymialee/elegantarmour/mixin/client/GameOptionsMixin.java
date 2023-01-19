@@ -2,7 +2,6 @@ package xyz.amymialee.elegantarmour.mixin.client;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.network.PacketByteBuf;
@@ -26,6 +25,7 @@ public class GameOptionsMixin {
             for (ElegantPart playerModelPart : eleganttable.getEnabledParts()) {
                 i |= playerModelPart.getBitFlag();
             }
+            i |= ElegantPart.CLIENT_ACTIVE.getBitFlag();
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeByte(i);
             ClientPlayNetworking.send(ElegantArmour.elegantC2S, buf);

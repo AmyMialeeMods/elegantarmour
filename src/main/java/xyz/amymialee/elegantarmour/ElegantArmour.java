@@ -17,7 +17,7 @@ public class ElegantArmour implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        ServerPlayNetworking.registerGlobalReceiver(ElegantArmour.elegantS2C, (server, player, networkHandler, buf, sender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(ElegantArmour.elegantC2S, (server, player, networkHandler, buf, sender) -> {
             byte flags = buf.readByte();
             server.execute(() -> {
                 if (player instanceof IEleganttable eleganttable) {
