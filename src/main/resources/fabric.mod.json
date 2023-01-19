@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "elegantarmour",
+  "version": "${version}",
+  "name": "Elegantarmour",
+  "description": "",
+  "authors": [
+    "AmyMialee"
+  ],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/elegantarmour/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "xyz.amymialee.elegantarmour.ElegantArmourClient"
+    ],
+    "main": [
+      "xyz.amymialee.elegantarmour.ElegantArmour"
+    ]
+  },
+  "mixins": [
+    "elegantarmour.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*"
+  }
+}

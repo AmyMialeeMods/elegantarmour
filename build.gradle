@@ -1,0 +1,43 @@
+plugins {
+    id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'io.github.juuxel.loom-quiltflower' version '1.8.0'
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+    //MialeeMisc
+    maven { url "https://maven.willbl.dev/releases" }
+    //MixinExtras
+    maven { url "https://jitpack.io" }
+    //Emi
+    maven { url "https://maven.terraformersmc.com" }
+    //Local
+    mavenLocal()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    //Included
+    modImplementation include ("xyz.amymialee:mialeemisc:${project.mialeemisc_version}")
+    implementation include("com.github.LlamaLad7:MixinExtras:${project.mixin_extras_version}")
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:${project.mixin_extras_version}")
+    //Required
+    modImplementation ("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+    //External
+    modImplementation ("dev.emi:emi:${project.emi_version}")
+
+}
+
+processResources {
+    inputs.property "version", project.version
+    filteringCharset "UTF-8"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
