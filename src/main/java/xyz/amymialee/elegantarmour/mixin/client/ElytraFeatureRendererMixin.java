@@ -1,6 +1,5 @@
 package xyz.amymialee.elegantarmour.mixin.client;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.ElytraFeatureRenderer;
 import net.minecraft.client.render.entity.model.EntityModel;
