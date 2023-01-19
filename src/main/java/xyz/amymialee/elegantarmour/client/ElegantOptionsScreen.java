@@ -30,6 +30,7 @@ public class ElegantOptionsScreen extends GameOptionsScreen {
         int i = 0;
 
         for (ElegantPart elegantPart : ElegantPart.values()) {
+            if (elegantPart.getId() == 7) continue;
             this.addDrawableChild(CyclingButtonWidget.onOffBuilder(isElegantPartEnabled(elegantPart)).build(
                     this.width / 2 - 155 + i % 2 * 160 + (elegantPart.getId() == 6 ? 80 : 0), this.height / 6 + 24 * (i >> 1), 150, 20, elegantPart.getOptionName(),
                     (button, enabled) -> toggleElegantPart(elegantPart, enabled)));

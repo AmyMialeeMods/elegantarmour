@@ -39,4 +39,9 @@ public class PlayerEntityMixin implements IEleganttable {
             this.enabledElegantParts.remove(part);
         }
     }
+
+    @Override
+    public Set<ElegantPart> getEnabledParts() {
+        return this.enabledElegantParts;
+    }
 }

@@ -23,7 +23,7 @@ public class HeadFeatureRendererMixin<T extends LivingEntity, M extends EntityMo
             if (eleganttable.isElegantPartEnabled(ElegantPart.HIDE_HEAD_ITEM)) {
                 ci.cancel();
             }
-            if (livingEntity != MinecraftClient.getInstance().player && ElegantClientSettings.isElegantPartEnabled(ElegantClientSettings.HIDE_OTHERS_HEAD_ITEM)) {
+            if (ElegantClientSettings.isElegantPartEnabled(eleganttable, ElegantClientSettings.HIDE_OTHERS_HEAD_ITEM)) {
                 ci.cancel();
             }
         }

@@ -49,6 +49,7 @@ public class ElegantClientConfig {
                     ElegantClientSettings.setElegantPart(setting, data.get(setting.name()).getAsBoolean());
                 }
             }
+            MinecraftClient.getInstance().options.sendClientSettings();
         } catch (FileNotFoundException e) {
             ElegantArmour.LOGGER.info("Config data not found.");
         } catch (Exception e) {

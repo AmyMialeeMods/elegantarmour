@@ -9,7 +9,8 @@ public enum ElegantPart {
     HIDE_HELMET(3, "hideHelmet"),
     HIDE_ELYTRA(4, "hideElytra"),
     HIDE_HEAD_ITEM(5, "hideHeadItem"),
-    THIN_ARMOUR(6, "thinArmour");
+    THIN_ARMOUR(6, "thinArmour"),
+    CLIENT_ACTIVE(7, "clientActive");
 
     private final int id;
     private final int bitFlag;

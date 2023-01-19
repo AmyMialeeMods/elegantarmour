@@ -1,12 +1,19 @@
 package xyz.amymialee.elegantarmour.mixin.client;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
+import net.minecraft.network.PacketByteBuf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import xyz.amymialee.elegantarmour.ElegantArmour;
+import xyz.amymialee.elegantarmour.config.ElegantPart;
+import xyz.amymialee.elegantarmour.util.IEleganttable;
 
 @Mixin(GameOptions.class)
 public class GameOptionsMixin {
@@ -14,23 +21,14 @@ public class GameOptionsMixin {
 
     @Inject(method = "sendClientSettings", at = @At("TAIL"))
     private void elegantArmour$sendSettings(CallbackInfo ci) {
-        if (this.client.player != null) {
+        if (this.client.player instanceof IEleganttable eleganttable) {
             int i = 0;
-//            for (ElegantPart playerModelPart : ElegantPart.ENABLED_ELEGANT_PARTS) {
-//                i |= playerModelPart.getBitFlag();
-//            }
-//            this.client.player.networkHandler.sendPacket(
-//                    new ClientSettingsC2SPacket(
-//                            this.language,
-//                            this.viewDistance.getValue(),
-//                            this.chatVisibility.getValue(),
-//                            this.chatColors.getValue(),
-//                            i,
-//                            this.mainArm.getValue(),
-//                            this.client.shouldFilterText(),
-//                            this.allowServerListing.getValue()
-//                    )
-//            );
+            for (ElegantPart playerModelPart : eleganttable.getEnabledParts()) {
+                i |= playerModelPart.getBitFlag();
+            }
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeByte(i);
+            ClientPlayNetworking.send(ElegantArmour.elegantC2S, buf);
         }
     }
 }

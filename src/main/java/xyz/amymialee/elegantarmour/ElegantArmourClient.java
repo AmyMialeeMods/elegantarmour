@@ -3,7 +3,9 @@ package xyz.amymialee.elegantarmour;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.model.Dilation;
 import net.minecraft.client.model.ModelData;
 import net.minecraft.client.model.ModelPartBuilder;
@@ -12,7 +14,11 @@ import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
+import net.minecraft.entity.Entity;
+import xyz.amymialee.elegantarmour.compat.EarsCompat;
 import xyz.amymialee.elegantarmour.config.ElegantClientConfig;
+import xyz.amymialee.elegantarmour.config.ElegantPart;
+import xyz.amymialee.elegantarmour.util.IEleganttable;
 
 @Environment(EnvType.CLIENT)
 public class ElegantArmourClient implements ClientModInitializer {
@@ -26,6 +32,26 @@ public class ElegantArmourClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(THIN_ARMOR_OUTER_LAYER, () -> TexturedModelData.of(getThinModelData(new Dilation(0.28f), false), 64, 32));
         EntityModelLayerRegistry.registerModelLayer(SLIM_THIN_ARMOR_OUTER_LAYER, () -> TexturedModelData.of(getThinModelData(new Dilation(0.28f), true), 64, 32));
         ElegantClientConfig.loadConfig();
+        if (FabricLoader.getInstance().isModLoaded("ears")) {
+            try {
+                EarsCompat.init();
+            } catch (Throwable ignored) {}
+        }
+        ClientPlayNetworking.registerGlobalReceiver(ElegantArmour.elegantS2C, (client, handler, buf, responseSender) -> {
+            int entityId = buf.readInt();
+            byte flags = buf.readByte();
+            client.execute(() -> {
+                if (client.world == null) {
+                    return;
+                }
+                Entity entity = client.world.getEntityById(entityId);
+                if (entity instanceof IEleganttable eleganttable) {
+                    for (ElegantPart part : ElegantPart.values()) {
+                        eleganttable.setElegantPart(part, (flags & part.getBitFlag()) == part.getBitFlag());
+                    }
+                }
+            });
+        });
     }
 
     public static ModelData getThinModelData(Dilation dilation, boolean slim) {

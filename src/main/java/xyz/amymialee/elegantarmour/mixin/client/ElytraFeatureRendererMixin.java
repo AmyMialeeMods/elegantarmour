@@ -22,7 +22,7 @@ public class ElytraFeatureRendererMixin<T extends LivingEntity, M extends Entity
             if (eleganttable.isElegantPartEnabled(ElegantPart.HIDE_ELYTRA)) {
                 ci.cancel();
             }
-            if (livingEntity != MinecraftClient.getInstance().player && ElegantClientSettings.isElegantPartEnabled(ElegantClientSettings.HIDE_OTHERS_ELYTRA)) {
+            if (ElegantClientSettings.isElegantPartEnabled(eleganttable, ElegantClientSettings.HIDE_OTHERS_ELYTRA)) {
                 ci.cancel();
             }
         }

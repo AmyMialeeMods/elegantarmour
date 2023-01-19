@@ -3,6 +3,7 @@ package xyz.amymialee.elegantarmour.config;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.text.Text;
+import xyz.amymialee.elegantarmour.util.IEleganttable;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -45,12 +46,12 @@ public enum ElegantClientSettings {
         return this.optionName;
     }
 
-    public static boolean isElegantPartEnabled(EquipmentSlot slot) {
+    public static boolean isElegantPartEnabled(IEleganttable eleganttable, EquipmentSlot slot) {
         return switch (slot) {
-            case FEET -> isElegantPartEnabled(ElegantClientSettings.HIDE_OTHERS_BOOTS);
-            case LEGS -> isElegantPartEnabled(ElegantClientSettings.HIDE_OTHERS_LEGGINGS);
-            case CHEST -> isElegantPartEnabled(ElegantClientSettings.HIDE_OTHERS_CHESTPLATE);
-            case HEAD -> isElegantPartEnabled(ElegantClientSettings.HIDE_OTHERS_HELMET);
+            case FEET -> isElegantPartEnabled(eleganttable, ElegantClientSettings.HIDE_OTHERS_BOOTS);
+            case LEGS -> isElegantPartEnabled(eleganttable, ElegantClientSettings.HIDE_OTHERS_LEGGINGS);
+            case CHEST -> isElegantPartEnabled(eleganttable, ElegantClientSettings.HIDE_OTHERS_CHESTPLATE);
+            case HEAD -> isElegantPartEnabled(eleganttable, ElegantClientSettings.HIDE_OTHERS_HELMET);
             case MAINHAND, OFFHAND -> true;
         };
     }
@@ -62,6 +63,16 @@ public enum ElegantClientSettings {
             ENABLED_ELEGANT_SETTINGS.remove(part);
         }
         ElegantClientConfig.saveConfig();
+    }
+
+    public static boolean isElegantPartEnabled(IEleganttable eleganttable, ElegantClientSettings part) {
+        if (eleganttable.isElegantPartEnabled(ElegantPart.CLIENT_ACTIVE)) {
+            return false;
+        }
+        if (MinecraftClient.getInstance().player instanceof IEleganttable clientPlayer && clientPlayer == eleganttable) {
+            return false;
+        }
+        return ENABLED_ELEGANT_SETTINGS.contains(part);
     }
 
     public static boolean isElegantPartEnabled(ElegantClientSettings part) {

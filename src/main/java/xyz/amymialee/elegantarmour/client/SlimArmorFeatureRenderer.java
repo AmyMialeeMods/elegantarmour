@@ -42,7 +42,7 @@ public class SlimArmorFeatureRenderer<T extends LivingEntity, M extends BipedEnt
 
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T livingEntity, float f, float g, float h, float j, float k, float l) {
-        if (livingEntity instanceof IEleganttable eleganttable && (eleganttable.isElegantPartEnabled(ElegantPart.THIN_ARMOUR) || ElegantClientSettings.isElegantPartEnabled(ElegantClientSettings.EVERYONE_THIN_ARMOUR))) {
+        if (livingEntity instanceof IEleganttable eleganttable && (eleganttable.isElegantPartEnabled(ElegantPart.THIN_ARMOUR) || ElegantClientSettings.isElegantPartEnabled(eleganttable, ElegantClientSettings.EVERYONE_THIN_ARMOUR))) {
             for (EquipmentSlot slot : EquipmentSlot.values()) {
                 this.renderArmor(matrixStack, vertexConsumerProvider, livingEntity, slot, i);
             }

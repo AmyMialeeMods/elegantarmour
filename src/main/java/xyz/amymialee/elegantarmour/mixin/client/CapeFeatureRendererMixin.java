@@ -22,7 +22,7 @@ public class CapeFeatureRendererMixin {
             if (eleganttable.isElegantPartEnabled(ElegantPart.HIDE_ELYTRA)) {
                 return new ItemStack(Items.AIR);
             }
-            if (abstractClientPlayerEntity != MinecraftClient.getInstance().player && ElegantClientSettings.isElegantPartEnabled(ElegantClientSettings.HIDE_OTHERS_ELYTRA)) {
+            if (ElegantClientSettings.isElegantPartEnabled(eleganttable, ElegantClientSettings.HIDE_OTHERS_ELYTRA)) {
                 return new ItemStack(Items.AIR);
             }
         }

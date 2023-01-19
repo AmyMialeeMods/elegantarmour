@@ -29,10 +29,10 @@ public class ArmorFeatureRendererMixin<T extends LivingEntity, M extends BipedEn
             if (eleganttable.isElegantPartEnabled(armorSlot)) {
                 ci.cancel();
             }
-            if (entity != MinecraftClient.getInstance().player && ElegantClientSettings.isElegantPartEnabled(armorSlot)) {
+            if (ElegantClientSettings.isElegantPartEnabled(eleganttable, armorSlot)) {
                 ci.cancel();
             }
-            if (eleganttable.isElegantPartEnabled(ElegantPart.THIN_ARMOUR) || (ElegantClientSettings.isElegantPartEnabled(ElegantClientSettings.EVERYONE_THIN_ARMOUR) && entity != MinecraftClient.getInstance().player)) {
+            if (eleganttable.isElegantPartEnabled(ElegantPart.THIN_ARMOUR) || (ElegantClientSettings.isElegantPartEnabled(eleganttable, ElegantClientSettings.EVERYONE_THIN_ARMOUR))) {
                 ItemStack itemStack = entity.getEquippedStack(armorSlot);
                 if (itemStack.getItem() instanceof ArmorItem armorItem) {
                     if (this.canTexture(armorItem)) {
