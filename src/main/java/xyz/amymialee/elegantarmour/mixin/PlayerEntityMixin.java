@@ -4,6 +4,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import xyz.amymialee.elegantarmour.config.ElegantClientSettings;
 import xyz.amymialee.elegantarmour.config.ElegantPart;
 import xyz.amymialee.elegantarmour.util.IEleganttable;
 
@@ -17,6 +18,9 @@ public class PlayerEntityMixin implements IEleganttable {
 
     @Override
     public boolean isElegantPartEnabled(ElegantPart part) {
+        if (ElegantClientSettings.isEnforced()) {
+            return false;
+        }
         return this.enabledElegantParts.contains(part);
     }
 

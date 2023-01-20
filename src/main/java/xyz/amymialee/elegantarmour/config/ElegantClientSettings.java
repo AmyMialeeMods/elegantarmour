@@ -80,6 +80,10 @@ public enum ElegantClientSettings {
         return ENABLED_ELEGANT_SETTINGS.contains(part);
     }
 
+    public static boolean isEnforced() {
+        return ENABLED_ELEGANT_SETTINGS.contains(ENFORCE_SETTINGS);
+    }
+
     public static void toggleElegantPart(ElegantClientSettings part, boolean enabled) {
         setElegantPart(part, enabled);
         MinecraftClient.getInstance().options.sendClientSettings();
