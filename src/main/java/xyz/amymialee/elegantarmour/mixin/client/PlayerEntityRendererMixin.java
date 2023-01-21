@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.amymialee.elegantarmour.ElegantArmourClient;
-import xyz.amymialee.elegantarmour.client.SlimArmorFeatureRenderer;
+import xyz.amymialee.elegantarmour.client.ThinArmorFeatureRenderer;
 
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
@@ -21,6 +21,6 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void elegantArmour$slimRenderer(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo ci) {
-        this.addFeature(new SlimArmorFeatureRenderer<>(this, new BipedEntityModel<>(ctx.getPart(ElegantArmourClient.THIN_ARMOR_INNER_LAYER)), new BipedEntityModel<>(ctx.getPart(ElegantArmourClient.THIN_ARMOR_OUTER_LAYER)), new BipedEntityModel<>(ctx.getPart(ElegantArmourClient.SLIM_THIN_ARMOR_OUTER_LAYER)), slim));
+        this.addFeature(new ThinArmorFeatureRenderer<>(this, new BipedEntityModel<>(ctx.getPart(ElegantArmourClient.THIN_ARMOR_INNER_LAYER)), new BipedEntityModel<>(ctx.getPart(ElegantArmourClient.THIN_ARMOR_OUTER_LAYER)), new BipedEntityModel<>(ctx.getPart(ElegantArmourClient.SLIM_THIN_ARMOR_OUTER_LAYER)), slim));
     }
 }

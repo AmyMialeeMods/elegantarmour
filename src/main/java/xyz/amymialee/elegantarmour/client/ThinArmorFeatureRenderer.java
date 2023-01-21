@@ -25,18 +25,18 @@ import xyz.amymialee.elegantarmour.util.IEleganttable;
 
 import java.util.Map;
 
-public class SlimArmorFeatureRenderer<T extends LivingEntity, M extends BipedEntityModel<T>, A extends BipedEntityModel<T>> extends FeatureRenderer<T, M> {
+public class ThinArmorFeatureRenderer<T extends LivingEntity, M extends BipedEntityModel<T>, A extends BipedEntityModel<T>> extends FeatureRenderer<T, M> {
     private static final Map<String, Identifier> ARMOR_TEXTURE_CACHE = Maps.newHashMap();
     private final A leggingsModel;
     private final A bodyModel;
-    private final A thinModel;
+    private final A slimModel;
     private final boolean slim;
 
-    public SlimArmorFeatureRenderer(FeatureRendererContext<T, M> context, A leggingsModel, A bodyModel, A thinModel, boolean slim) {
+    public ThinArmorFeatureRenderer(FeatureRendererContext<T, M> context, A leggingsModel, A bodyModel, A slimModel, boolean slim) {
         super(context);
         this.leggingsModel = leggingsModel;
         this.bodyModel = bodyModel;
-        this.thinModel = thinModel;
+        this.slimModel = slimModel;
         this.slim = slim;
     }
 
@@ -65,7 +65,7 @@ public class SlimArmorFeatureRenderer<T extends LivingEntity, M extends BipedEnt
                 if (this.usesSecondLayer(armorSlot)) {
                     model = this.leggingsModel;
                 } else {
-                    model = this.slim && this.canSlimTexture(armorItem) ? this.thinModel : this.bodyModel;
+                    model = this.slim && this.canSlimTexture(armorItem) ? this.slimModel : this.bodyModel;
                 }
                 this.getContextModel().setAttributes(model);
                 this.setVisible(model, armorSlot);
