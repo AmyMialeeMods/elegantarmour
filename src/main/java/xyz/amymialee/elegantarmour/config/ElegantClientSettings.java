@@ -9,24 +9,20 @@ import java.util.EnumSet;
 import java.util.Set;
 
 public enum ElegantClientSettings {
-    HIDE_OTHERS_BOOTS(0, "hideOthersBoots"),
-    HIDE_OTHERS_LEGGINGS(1, "hideOthersLeggings"),
-    HIDE_OTHERS_CHESTPLATE(2, "hideOthersChestplate"),
-    HIDE_OTHERS_HELMET(3, "hideOthersHelmet"),
-    HIDE_OTHERS_ELYTRA(4, "hideOthersElytra"),
-    HIDE_OTHERS_HEAD_ITEM(5, "hideOthersHeadItem"),
-    EVERYONE_THIN_ARMOUR(6, "everyoneThinArmour"),
-    ENFORCE_SETTINGS(7, "enforceSettings");
+    HIDE_OTHERS_BOOTS("hideOthersBoots"),
+    HIDE_OTHERS_LEGGINGS("hideOthersLeggings"),
+    HIDE_OTHERS_CHESTPLATE("hideOthersChestplate"),
+    HIDE_OTHERS_HELMET("hideOthersHelmet"),
+    HIDE_OTHERS_ELYTRA("hideOthersElytra"),
+    HIDE_OTHERS_HEAD_ITEM("hideOthersHeadItem"),
+    EVERYONE_THIN_ARMOUR("everyoneThinArmour"),
+    ENFORCE_SETTINGS("enforceSettings");
 
     public static final Set<ElegantClientSettings> ENABLED_ELEGANT_SETTINGS = EnumSet.noneOf(ElegantClientSettings.class);
-    private final int id;
-    private final int bitFlag;
     private final String name;
     private final Text optionName;
 
-    ElegantClientSettings(int id, String name) {
-        this.id = id;
-        this.bitFlag = 1 << id;
+    ElegantClientSettings(String name) {
         this.name = name;
         this.optionName = Text.translatable("options.elegantPart." + name);
     }
