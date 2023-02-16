@@ -7,12 +7,11 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import xyz.amymialee.elegantarmour.config.ElegantClientConfig;
-import xyz.amymialee.elegantarmour.config.ElegantPart;
 import xyz.amymialee.elegantarmour.config.ElegantClientSettings;
+import xyz.amymialee.elegantarmour.config.ElegantPart;
 import xyz.amymialee.elegantarmour.util.IEleganttable;
 
 import java.util.EnumSet;
@@ -60,16 +59,6 @@ public class ElegantOptionsScreen extends GameOptionsScreen {
         this.renderBackground(matrices);
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 16777215);
         super.render(matrices, mouseX, mouseY, delta);
-    }
-
-    public static boolean getPartForSlot(EquipmentSlot slot) {
-        return switch (slot) {
-            case FEET -> isElegantPartEnabled(ElegantPart.HIDE_BOOTS);
-            case LEGS -> isElegantPartEnabled(ElegantPart.HIDE_LEGGINGS);
-            case CHEST -> isElegantPartEnabled(ElegantPart.HIDE_CHESTPLATE);
-            case HEAD -> isElegantPartEnabled(ElegantPart.HIDE_HELMET);
-            case MAINHAND, OFFHAND -> true;
-        };
     }
 
     public static void setElegantPart(ElegantPart part, boolean enabled) {

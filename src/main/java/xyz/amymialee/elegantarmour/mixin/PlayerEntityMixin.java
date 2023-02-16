@@ -15,6 +15,8 @@ import java.util.Set;
 public class PlayerEntityMixin implements IEleganttable {
     @Unique
     public final Set<ElegantPart> enabledElegantParts = EnumSet.noneOf(ElegantPart.class);
+    @Unique
+    public boolean elegantEnabled = false;
 
     @Override
     public boolean isElegantPartEnabled(ElegantPart part) {
@@ -39,13 +41,22 @@ public class PlayerEntityMixin implements IEleganttable {
     public void setElegantPart(ElegantPart part, boolean enabled) {
         if (enabled) {
             this.enabledElegantParts.add(part);
+            this.elegantEnabled = true;
         } else {
             this.enabledElegantParts.remove(part);
+            if (this.enabledElegantParts.isEmpty()) {
+                this.elegantEnabled = false;
+            }
         }
     }
 
     @Override
     public Set<ElegantPart> getEnabledParts() {
         return this.enabledElegantParts;
+    }
+
+    @Override
+    public boolean isElegantEnabled() {
+        return this.elegantEnabled;
     }
 }

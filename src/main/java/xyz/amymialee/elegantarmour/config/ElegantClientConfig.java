@@ -14,6 +14,9 @@ import java.io.FileWriter;
 
 public class ElegantClientConfig {
     private static final File optionsFile = new File(MinecraftClient.getInstance().runDirectory, "config/elegantarmour.json");
+    public static float elegantArmourInnerScale = 0.27f;
+    public static float elegantArmourOuterScale = 0.28f;
+    public static boolean slimArms = true;
 
     public static void saveConfig() {
         try {
@@ -25,6 +28,9 @@ public class ElegantClientConfig {
             for (ElegantClientSettings setting : ElegantClientSettings.values()) {
                 json.addProperty(setting.name(), ElegantClientSettings.isElegantPartEnabled(setting));
             }
+            json.addProperty("innerScale", elegantArmourInnerScale);
+            json.addProperty("outerScale", elegantArmourOuterScale);
+            json.addProperty("slimArms", slimArms);
             String jsonData = gson.toJson(json);
             FileWriter writer = new FileWriter(optionsFile);
             writer.write(jsonData);
@@ -48,6 +54,15 @@ public class ElegantClientConfig {
                 if (data.has(setting.name())) {
                     ElegantClientSettings.setElegantPart(setting, data.get(setting.name()).getAsBoolean());
                 }
+            }
+            if (data.has("innerScale")) {
+                elegantArmourInnerScale = data.get("innerScale").getAsFloat();
+            }
+            if (data.has("outerScale")) {
+                elegantArmourOuterScale = data.get("outerScale").getAsFloat();
+            }
+            if (data.has("slimArms")) {
+                slimArms = data.get("slimArms").getAsBoolean();
             }
             MinecraftClient.getInstance().options.sendClientSettings();
         } catch (FileNotFoundException e) {

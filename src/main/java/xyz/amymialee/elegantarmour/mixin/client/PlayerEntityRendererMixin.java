@@ -20,7 +20,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    public void elegantArmour$slimRenderer(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo ci) {
+    private void elegantArmour$slimRenderer(EntityRendererFactory.Context ctx, boolean slim, CallbackInfo ci) {
         this.addFeature(new ThinArmorFeatureRenderer<>(this, new BipedEntityModel<>(ctx.getPart(ElegantArmourClient.THIN_ARMOR_INNER_LAYER)), new BipedEntityModel<>(ctx.getPart(ElegantArmourClient.THIN_ARMOR_OUTER_LAYER)), new BipedEntityModel<>(ctx.getPart(ElegantArmourClient.SLIM_THIN_ARMOR_OUTER_LAYER)), slim));
     }
 }

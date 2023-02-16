@@ -31,14 +31,6 @@ public enum ElegantClientSettings {
         this.optionName = Text.translatable("options.elegantPart." + name);
     }
 
-    public int getBitFlag() {
-        return this.bitFlag;
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
     public String getName() {
         return this.name;
     }

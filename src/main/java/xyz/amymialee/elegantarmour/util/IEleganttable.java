@@ -13,4 +13,6 @@ public interface IEleganttable {
     void setElegantPart(ElegantPart part, boolean enabled);
 
     Set<ElegantPart> getEnabledParts();
+
+    boolean isElegantEnabled();
 }

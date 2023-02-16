@@ -28,9 +28,9 @@ public class ElegantArmourClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        EntityModelLayerRegistry.registerModelLayer(THIN_ARMOR_INNER_LAYER, () -> TexturedModelData.of(getThinModelData(new Dilation(0.27f), false), 64, 32));
-        EntityModelLayerRegistry.registerModelLayer(THIN_ARMOR_OUTER_LAYER, () -> TexturedModelData.of(getThinModelData(new Dilation(0.28f), false), 64, 32));
-        EntityModelLayerRegistry.registerModelLayer(SLIM_THIN_ARMOR_OUTER_LAYER, () -> TexturedModelData.of(getThinModelData(new Dilation(0.28f), true), 64, 32));
+        EntityModelLayerRegistry.registerModelLayer(THIN_ARMOR_INNER_LAYER, () -> TexturedModelData.of(getThinModelData(new Dilation(ElegantClientConfig.elegantArmourInnerScale), false), 64, 32));
+        EntityModelLayerRegistry.registerModelLayer(THIN_ARMOR_OUTER_LAYER, () -> TexturedModelData.of(getThinModelData(new Dilation(ElegantClientConfig.elegantArmourOuterScale), false), 64, 32));
+        EntityModelLayerRegistry.registerModelLayer(SLIM_THIN_ARMOR_OUTER_LAYER, () -> TexturedModelData.of(getThinModelData(new Dilation(ElegantClientConfig.elegantArmourOuterScale), true), 64, 32));
         ElegantClientConfig.loadConfig();
         if (FabricLoader.getInstance().isModLoaded("ears")) {
             try {

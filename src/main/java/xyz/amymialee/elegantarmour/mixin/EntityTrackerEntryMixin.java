@@ -2,17 +2,10 @@ package xyz.amymialee.elegantarmour.mixin;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.ClientSettingsC2SPacket;
-import net.minecraft.network.packet.s2c.play.EntityEquipmentUpdateS2CPacket;
 import net.minecraft.server.network.EntityTrackerEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,7 +21,6 @@ import java.util.function.Consumer;
 @Mixin(EntityTrackerEntry.class)
 public class EntityTrackerEntryMixin {
     @Shadow @Final private Entity entity;
-    @Shadow private int lastHeadPitch;
     @Shadow @Final private Consumer<Packet<?>> receiver;
 
     @Inject(method = "syncEntityData", at = @At("TAIL"))

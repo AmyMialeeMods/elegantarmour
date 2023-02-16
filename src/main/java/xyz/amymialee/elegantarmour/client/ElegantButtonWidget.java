@@ -1,12 +1,14 @@
 package xyz.amymialee.elegantarmour.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import xyz.amymialee.elegantarmour.ElegantArmour;
+import xyz.amymialee.elegantarmour.util.IEleganttable;
 import xyz.amymialee.mialeemisc.util.MialeeMath;
 
 import java.awt.Color;
@@ -28,9 +30,13 @@ public class ElegantButtonWidget extends ButtonWidget {
         RenderSystem.setShaderTexture(0, ELEGANT_TEXTURE);
         IconLocation iconLocation = this.isHovered() ? IconLocation.BOX_HOVER : IconLocation.BOX_DEFAULT;
         this.drawTexture(matrices, this.x, this.y, iconLocation.getU(), iconLocation.getV(), 20, 20);
-        cycle = MialeeMath.clampLoop(cycle + delta, 0, 160);
-        Color colour = Color.getHSBColor(cycle / 160f, 0.65f, 1.0f);
-        RenderSystem.setShaderColor(colour.getRed() / 255f, colour.getGreen() / 255f, colour.getBlue() / 255f, 1.0F);
+        if (MinecraftClient.getInstance().player instanceof IEleganttable eleganttable && eleganttable.isElegantEnabled()) {
+            cycle = MialeeMath.clampLoop(cycle + delta, 0, 160);
+            Color colour = Color.getHSBColor(cycle / 160f, 0.65f, 1.0f);
+            RenderSystem.setShaderColor(colour.getRed() / 255f, colour.getGreen() / 255f, colour.getBlue() / 255f, 1.0F);
+        } else {
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        }
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, ELEGANT_TEXTURE);
         this.drawTexture(matrices, this.x, this.y, IconLocation.ICON.getU(), IconLocation.ICON.getV(), 20, 20);

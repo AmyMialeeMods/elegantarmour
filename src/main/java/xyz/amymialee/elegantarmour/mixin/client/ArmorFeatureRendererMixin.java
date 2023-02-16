@@ -22,7 +22,7 @@ import xyz.amymialee.elegantarmour.config.ElegantPart;
 import xyz.amymialee.elegantarmour.util.IEleganttable;
 
 @Mixin(ArmorFeatureRenderer.class)
-public class ArmorFeatureRendererMixin<T extends LivingEntity, M extends BipedEntityModel<T>, A extends BipedEntityModel<T>> {
+public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, A extends BipedEntityModel<T>> {
     @Inject(method = "renderArmor", at = @At("HEAD"), cancellable = true)
     private void elegantArmour$dontRender(MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, EquipmentSlot armorSlot, int light, A model, CallbackInfo ci) {
         if (entity instanceof IEleganttable eleganttable) {
