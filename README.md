@@ -1,9 +1,10 @@
 # Elegant Armour
-Elegant Armour is a mod that allows you to customize the visibility and fit of your armour.
-Works entirely client side but can be installed on the server to allow your settings to be synced across all clients.
-You can change your configuration of the mod using the in-game options menu found beside the skin customization menu.
+Elegant Armour is a mod that lets the user fully customize the way their equipped armour renders, as well as provides an alternative style for wearing it.  
+Makes it so that armour better fits players who are using slim models by making the sleeves a tighter fit.  
+The mod has server compatibility allowing you to see other player's armour as they set it for themselves.  
+You can also modify your settings for other players, and enforce these changes so other players cannot use the mod for an unfair surprise advantage.  
 
-<img src="https://github.com/AmyMialeeMods/visible-barriers/raw/main/assets/barriers.png" alt="">
+<img src="https://github.com/AmyMialeeMods/elegantarmour/raw/main/assets/menu.png" alt="">
 
 <table align="center">
     <tr>
@@ -19,12 +20,12 @@ You can change your configuration of the mod using the in-game options menu foun
             </a>
         </th>
         <th>
-            <a href="https://www.curseforge.com/minecraft/mc-mods/visible-barriers">
+            <a href="https://www.curseforge.com/minecraft/mc-mods/elegant-armour">
                 <img src="https://cdn.discordapp.com/attachments/793182374410059887/923990008543711282/anvil.svg" width="150" height="150" alt="">
             </a>
         </th>
         <th>
-            <a href="https://modrinth.com/mod/visible-barriers">
+            <a href="https://modrinth.com/mod/elegant-armour">
                 <img src="https://docs.modrinth.com/img/logo.svg" width="150" height="150" alt="">
             </a>
         </th>
