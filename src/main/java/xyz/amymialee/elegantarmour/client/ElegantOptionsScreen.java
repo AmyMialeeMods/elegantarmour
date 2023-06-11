@@ -1,86 +1,197 @@
 package xyz.amymialee.elegantarmour.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.ScreenTexts;
+import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.PressableWidget;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
-import xyz.amymialee.elegantarmour.config.ElegantClientConfig;
-import xyz.amymialee.elegantarmour.config.ElegantClientSettings;
-import xyz.amymialee.elegantarmour.config.ElegantPart;
-import xyz.amymialee.elegantarmour.util.IEleganttable;
+import org.jetbrains.annotations.NotNull;
+import xyz.amymialee.elegantarmour.ElegantArmourConfig;
+import xyz.amymialee.elegantarmour.cca.ArmourComponent;
+import xyz.amymialee.elegantarmour.util.ElegantIcons;
+import xyz.amymialee.elegantarmour.util.ElegantPlayerData;
+import xyz.amymialee.elegantarmour.util.ElegantState;
 
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.Objects;
+import java.util.function.Consumer;
 
-public class ElegantOptionsScreen extends GameOptionsScreen {
-    public static final Set<ElegantPart> ENABLED_ELEGANT_PARTS = EnumSet.noneOf(ElegantPart.class);
+public class ElegantOptionsScreen extends Screen {
+    private static ArmorStandEntity backupEntity;
+    private final ElegantPlayerData data;
+    private final PlayerEntity player;
+    private final Screen parent;
+    private int x;
+    private int y;
 
-    public ElegantOptionsScreen(Screen parent, GameOptions gameOptions) {
-        super(parent, gameOptions, Text.translatable("options.elegantCustomisation.title"));
+    public ElegantOptionsScreen(Screen parent, PlayerEntity player, @NotNull ElegantPlayerData data) {
+        super(Text.literal(data.getPlayerName()));
+        this.parent = parent;
+        this.player = player;
+        this.data = data;
+    }
+
+    @Override
+    public void close() {
+        if (this.client != null && this.parent != null) {
+            this.client.setScreen(this.parent);
+        }
     }
 
     @Override
     protected void init() {
-        int i = 0;
-
-        for (ElegantPart elegantPart : ElegantPart.values()) {
-            if (elegantPart.getId() == 7) continue;
-            this.addDrawableChild(CyclingButtonWidget.onOffBuilder(isElegantPartEnabled(elegantPart)).build(
-                    this.width / 2 - 155 + i % 2 * 160 + (elegantPart.getId() == 6 ? 80 : 0), this.height / 6 + 24 * (i >> 1), 150, 20, elegantPart.getOptionName(),
-                    (button, enabled) -> toggleElegantPart(elegantPart, enabled)));
-            i++;
+        this.x = (this.width / 2) - (ElegantIcons.BACKGROUND.getWidth() / 2);
+        this.y = (this.height / 2) - (ElegantIcons.BACKGROUND.getHeight() / 2);
+        boolean isClientPlayer = false;
+        if (this.client != null && this.client.player != null) {
+            if (this.client.player == this.player) {
+                isClientPlayer = true;
+            }
         }
-        i += 1;
-        for (ElegantClientSettings elegantSetting : ElegantClientSettings.values()) {
-            this.addDrawableChild(CyclingButtonWidget.onOffBuilder(ElegantClientSettings.isElegantPartEnabled(elegantSetting)).build(
-                    this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), 150, 20, elegantSetting.getOptionName(),
-                    (button, enabled) -> ElegantClientSettings.toggleElegantPart(elegantSetting, enabled)));
-            i++;
-        }
+        this.addButtons(isClientPlayer, this.y + 19, ElegantIcons.HELMET, "options.elegantarmour.head");
+        this.addButtons(isClientPlayer, this.y + 19 + 18, ElegantIcons.CHESTPLATE, "options.elegantarmour.chest");
+        this.addButtons(isClientPlayer, this.y + 19 + 2 * 18, ElegantIcons.LEGGINGS, "options.elegantarmour.legs");
+        this.addButtons(isClientPlayer, this.y + 19 + 3 * 18, ElegantIcons.BOOTS, "options.elegantarmour.feet");
+        this.addButtons(isClientPlayer, this.y + 19 + 4 * 18, ElegantIcons.ELYTRA, "options.elegantarmour.elytra");
+        this.addButtons(isClientPlayer, this.y + 19 + 5 * 18, ElegantIcons.SMALL, "options.elegantarmour.small");
+    }
 
-        if (i % 2 == 1) {
-            i++;
-        }
-
-        if (this.client == null) {
-            return;
-        }
-
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height / 6 + 24 * (i >> 1), 200, 20, ScreenTexts.DONE, button -> this.client.setScreen(this.parent)));
+    private void addButtons(boolean isClientPlayer, int y, ElegantIcons icon, String key) {
+        Text message = Text.translatable(key);
+        ElegantDisplayWidget displayWidget = this.addDrawableChild(new ElegantDisplayWidget(this.x + 75, y, this.data.getState(icon.ordinal() - 6), isClientPlayer, message, icon));
+        Consumer<ElegantState> stateConsumer = state -> {
+            this.data.setState(icon.ordinal() - 6, state);
+            displayWidget.setValue(state);
+        };
+        this.addDrawableChild(new ElegantButtonWidget(this.x + 75 + 18, y, message, this.data, ElegantState.DEFAULT, Objects.equals(this.data.getPlayerName(), "Default") ? (a) -> {} : stateConsumer, icon, Text.translatable(icon == ElegantIcons.SMALL ? ElegantState.DEFAULT.getSmallKey() : ElegantState.DEFAULT.getTranslationKey())));
+        this.addDrawableChild(new ElegantButtonWidget(this.x + 75 + 18 + ElegantIcons.OPTION_DEFAULT.getWidth(), y, message, this.data, ElegantState.SHOW, stateConsumer, icon, Text.translatable(icon == ElegantIcons.SMALL ? ElegantState.SHOW.getSmallKey() : ElegantState.SHOW.getTranslationKey())));
+        this.addDrawableChild(new ElegantButtonWidget(this.x + 75 + 18 + ElegantIcons.OPTION_DEFAULT.getWidth() * 2, y, message, this.data, ElegantState.HIDE, stateConsumer, icon, Text.translatable(icon == ElegantIcons.SMALL ? ElegantState.HIDE.getSmallKey() : ElegantState.HIDE.getTranslationKey())));
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 16777215);
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        this.renderBackground(context);
+        context.drawTexture(ElegantIcons.ELEGANT_TEXTURE, this.x, this.y, 0, 0, ElegantIcons.BACKGROUND.getWidth(), ElegantIcons.BACKGROUND.getHeight());
+        if (this.player != null) {
+            drawEntity(context, this.x + 39, this.y + 118, 46, (float) (this.x + 63) - mouseX, (float) (this.y + 53) - mouseY, this.player);
+        } else if (this.client != null && this.client.world != null && this.client.player != null) {
+            if (backupEntity == null) {
+                backupEntity = new ArmorStandEntity(this.client.world, this.client.player.getX(), this.client.player.getY(), this.client.player.getZ());
+                if (this.shouldShow(0)) backupEntity.equipStack(EquipmentSlot.HEAD, Items.IRON_HELMET.getDefaultStack());
+                if (this.shouldShow(1)) {
+                    backupEntity.equipStack(EquipmentSlot.CHEST, Items.IRON_CHESTPLATE.getDefaultStack());
+                } else if (this.shouldShow(4)) {
+                    backupEntity.equipStack(EquipmentSlot.CHEST, Items.ELYTRA.getDefaultStack());
+                }
+                if (this.shouldShow(2)) backupEntity.equipStack(EquipmentSlot.LEGS, Items.IRON_LEGGINGS.getDefaultStack());
+                if (this.shouldShow(3)) backupEntity.equipStack(EquipmentSlot.FEET, Items.IRON_BOOTS.getDefaultStack());
+                backupEntity.setHideBasePlate(true);
+                backupEntity.setShowArms(true);
+            }
+            drawEntity(context, this.x + 39, this.y + 118, 46, (float) (this.x + 63) - mouseX, (float) (this.y + 53) - mouseY, backupEntity);
+        }
+        Text name = Text.literal(this.data.getPlayerName()).append(" ").append(Text.translatable("options.elegantCustomisation"));
+        context.drawText(this.textRenderer, name, this.width / 2 - this.textRenderer.getWidth(name) / 2, this.y + 7, 4210752, false);
+        super.render(context, mouseX, mouseY, delta);
     }
 
-    public static void setElegantPart(ElegantPart part, boolean enabled) {
-        if (enabled) {
-            ENABLED_ELEGANT_PARTS.add(part);
-        } else {
-            ENABLED_ELEGANT_PARTS.remove(part);
+    private boolean shouldShow(int index) {
+        ElegantState state = this.data.getState(index);
+        ElegantState configState = ElegantArmourConfig.getState(index);
+        if (configState == ElegantState.HIDE) {
+            return false;
+        } else if (configState == ElegantState.DEFAULT) {
+            return state != ElegantState.HIDE && (state != ElegantState.DEFAULT || ElegantArmourConfig.getState(index) != ElegantState.HIDE);
         }
-        ElegantClientConfig.saveConfig();
-        for (ElegantPart eachPart : ElegantPart.values()) {
-            if (MinecraftClient.getInstance().player instanceof IEleganttable eleganttable) {
-                eleganttable.setElegantPart(eachPart, isElegantPartEnabled(eachPart));
+        return true;
+    }
+
+    private static class ElegantDisplayWidget extends ClickableWidget {
+        private ElegantState value;
+        private final ElegantIcons icon;
+        private final boolean isClientPlayer;
+
+        public ElegantDisplayWidget(int x, int y, ElegantState value, boolean isClientPlayer, Text message, ElegantIcons icon) {
+            super(x, y, 18, 18, message);
+            this.value = value;
+            this.icon = icon;
+            this.isClientPlayer = isClientPlayer;
+            this.setTooltip(Tooltip.of(Text.translatable("options.elegantarmour." + icon.name().toLowerCase())));
+        }
+
+        public void setValue(ElegantState value) {
+            this.value = value;
+            if (this.isClientPlayer) ArmourComponent.syncC2S();
+            ElegantArmourConfig.saveConfig();
+        }
+
+        @Override
+        public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+            ElegantIcons icon = this.isMouseOver(mouseX, mouseY) ? ElegantIcons.BOX_HOVER : ElegantIcons.BOX_DEFAULT;
+            context.drawTexture(ElegantIcons.ELEGANT_TEXTURE, this.getX(), this.getY(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight());
+            if (this.value == ElegantState.HIDE) {
+                RenderSystem.setShaderColor(0.2f, 0.2f, 0.2f, 1.0f);
+            } else if (this.value == ElegantState.DEFAULT) {
+                RenderSystem.setShaderColor(0.65f, 0.65f, 0.65f, 1.0f);
+            }
+            context.drawTexture(ElegantIcons.ELEGANT_TEXTURE, this.getX(), this.getY(), this.icon.getU(), this.icon.getV(), this.icon.getWidth(), this.icon.getHeight());
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+
+        @Override
+        protected void appendClickableNarrations(NarrationMessageBuilder builder) {}
+    }
+
+    private static class ElegantButtonWidget extends PressableWidget {
+        private final ElegantPlayerData data;
+        private final ElegantState value;
+        private final Consumer<ElegantState> callback;
+        private final ElegantIcons icon;
+        private final Text text;
+
+        ElegantButtonWidget(int x, int y, Text message, ElegantPlayerData data, ElegantState value, Consumer<ElegantState> callback, ElegantIcons icon, Text text) {
+            super(x, y, ElegantIcons.OPTION_DEFAULT.getWidth(), ElegantIcons.OPTION_DEFAULT.getHeight(), message);
+            this.data = data;
+            this.value = value;
+            this.callback = callback;
+            this.icon = icon;
+            this.text = text;
+        }
+
+        @Override
+        public void onPress() {
+            boolean selected = this.data.getState(this.icon.ordinal() - 6) == this.value || (this.value == ElegantState.DEFAULT && Objects.equals(this.data.getPlayerName(), "Default"));
+            if (!selected) {
+                this.callback.accept(this.value);
+                backupEntity = null;
             }
         }
-    }
 
-    public static boolean isElegantPartEnabled(ElegantPart part) {
-        return ENABLED_ELEGANT_PARTS.contains(part);
-    }
+        @Override
+        public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+            boolean selected = this.data.getState(this.icon.ordinal() - 6) == this.value || (this.value == ElegantState.DEFAULT && Objects.equals(this.data.getPlayerName(), "Default"));
+            ElegantIcons icon = selected ? ElegantIcons.OPTION_SELECTED : this.isMouseOver(mouseX, mouseY) ? ElegantIcons.OPTION_HOVER : ElegantIcons.OPTION_DEFAULT;
+            context.drawTexture(ElegantIcons.ELEGANT_TEXTURE, this.getX(), this.getY(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight());
+            TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+            context.drawTextWrapped(MinecraftClient.getInstance().textRenderer, this.text, this.getX() + ElegantIcons.OPTION_DEFAULT.getWidth() / 2 - textRenderer.getWidth(this.text) / 2, this.getY() + textRenderer.getWrappedLinesHeight(this.text, ElegantIcons.OPTION_DEFAULT.getWidth()) / 2 + 1, ElegantIcons.OPTION_DEFAULT.getWidth(), (6839882 & 16711422) >> 1);
+        }
 
-    public static void toggleElegantPart(ElegantPart part, boolean enabled) {
-        setElegantPart(part, enabled);
-        MinecraftClient.getInstance().options.sendClientSettings();
+        @Override
+        protected void appendClickableNarrations(NarrationMessageBuilder builder) {}
     }
 }

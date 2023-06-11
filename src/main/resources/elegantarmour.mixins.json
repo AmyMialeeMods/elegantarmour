@@ -4,19 +4,15 @@
   "package": "xyz.amymialee.elegantarmour.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "EntityTrackerEntryMixin",
-    "PlayerEntityMixin",
-    "ServerPlayerEntityMixin"
   ],
   "client": [
-    "client.ArmorFeatureRendererMixin",
-    "client.CapeFeatureRendererMixin",
-    "client.ClientPlayNetworkHandlerMixin",
-    "client.ElytraFeatureRendererMixin",
-    "client.GameOptionsMixin",
-    "client.HeadFeatureRendererMixin",
-    "client.OptionsScreenMixin",
-    "client.PlayerEntityRendererMixin"
+    "ArmorFeatureRendererMixin",
+    "CapeFeatureRendererMixin",
+    "ElytraFeatureRendererMixin",
+    "HeadFeatureRendererMixin",
+    "OptionsScreenMixin",
+    "PlayerEntityRendererMixin",
+    "SocialInteractionsPlayerListEntryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

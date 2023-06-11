@@ -2,13 +2,15 @@
   "schemaVersion": 1,
   "id": "elegantarmour",
   "version": "${version}",
-  "name": "Elegant Armour",
-  "description": "A Fitting Mod for your Armour",
+  "name": "elegantarmour",
+  "description": "An elegant way of hiding you and your friends equipment.",
   "authors": [
     "AmyMialee",
-    "Sillvia"
+    "SillviaTV"
   ],
-  "contact": {},
+  "contact": {
+    "repo": "https://github.com/AmyMialeeMods/elegantarmour"
+  },
   "license": "All-Rights-Reserved",
   "icon": "assets/elegantarmour/icon.png",
   "environment": "*",
@@ -18,11 +20,19 @@
     ],
     "main": [
       "xyz.amymialee.elegantarmour.ElegantArmour"
+    ],
+    "cardinal-components-entity": [
+      "xyz.amymialee.elegantarmour.ElegantArmour"
     ]
   },
   "mixins": [
     "elegantarmour.mixins.json"
   ],
+  "custom": {
+    "cardinal-components": [
+      "elegantarmour:armour"
+    ]
+  },
   "depends": {
     "fabric": "*"
   }

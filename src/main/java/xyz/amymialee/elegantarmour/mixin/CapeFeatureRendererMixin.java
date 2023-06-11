@@ -1,4 +1,4 @@
-package xyz.amymialee.elegantarmour.mixin.client;
+package xyz.amymialee.elegantarmour.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -9,22 +9,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import xyz.amymialee.elegantarmour.config.ElegantClientSettings;
-import xyz.amymialee.elegantarmour.config.ElegantPart;
-import xyz.amymialee.elegantarmour.util.IEleganttable;
+import xyz.amymialee.elegantarmour.ElegantArmour;
+import xyz.amymialee.elegantarmour.ElegantArmourConfig;
+import xyz.amymialee.elegantarmour.cca.ArmourComponent;
+import xyz.amymialee.elegantarmour.util.ElegantState;
 
 @Mixin(CapeFeatureRenderer.class)
 public class CapeFeatureRendererMixin {
     @WrapOperation(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/client/network/AbstractClientPlayerEntity;FFFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;getEquippedStack(Lnet/minecraft/entity/EquipmentSlot;)Lnet/minecraft/item/ItemStack;"))
-    private ItemStack elegantArmour$showCape(AbstractClientPlayerEntity abstractClientPlayerEntity, EquipmentSlot equipmentSlot, Operation<ItemStack> original) {
-        if (abstractClientPlayerEntity instanceof IEleganttable eleganttable) {
-            if (eleganttable.isElegantPartEnabled(ElegantPart.HIDE_ELYTRA)) {
-                return new ItemStack(Items.AIR);
-            }
-            if (ElegantClientSettings.isElegantPartEnabled(eleganttable, ElegantClientSettings.HIDE_OTHERS_ELYTRA)) {
+    private ItemStack elegantArmour$showCape(AbstractClientPlayerEntity entity, EquipmentSlot slot, Operation<ItemStack> original) {
+        ArmourComponent armourComponent = ElegantArmour.ARMOUR.get(entity);
+        ElegantState state = armourComponent.data.getElytraState();
+        ElegantState configState = ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getEntityName()).getElytraState();
+        if (configState == ElegantState.HIDE) {
+            return new ItemStack(Items.AIR);
+        } else if (configState == ElegantState.DEFAULT) {
+            if (state == ElegantState.HIDE || (state == ElegantState.DEFAULT && ElegantArmourConfig.getDefaultElytra() == ElegantState.HIDE)) {
                 return new ItemStack(Items.AIR);
             }
         }
-        return original.call(abstractClientPlayerEntity, equipmentSlot);
+        return original.call(entity, slot);
     }
 }
