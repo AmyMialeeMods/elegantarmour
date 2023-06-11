@@ -44,7 +44,7 @@ public class SocialInteractionsPlayerListEntryMixin {
         } else {
             player = null;
         }
-        this.elegantButton = new ElegantMenuWidget(0, 0, Text.translatable("options.elegantCustomisation"), button -> client.setScreen(new ElegantOptionsScreen(parent, player, data)), UUID.fromString(client.getSession().getUuid()));
+        this.elegantButton = new ElegantMenuWidget(0, 0, Text.translatable("options.elegantCustomisation"), button -> client.setScreen(new ElegantOptionsScreen(parent, player, data)), uuid);
         this.elegantButton.setTooltip(Tooltip.of(Text.translatable("options.elegantCustomisation")));
         this.elegantButton.setTooltipDelay(10);
         this.elegantButton.active = true;

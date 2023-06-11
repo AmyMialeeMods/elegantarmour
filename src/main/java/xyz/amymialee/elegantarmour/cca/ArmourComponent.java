@@ -20,7 +20,7 @@ public class ArmourComponent implements AutoSyncedComponent {
 		if (ElegantArmourConfig.playerData.containsKey(player.getUuid())) {
 			this.data = ElegantArmourConfig.playerData.get(player.getUuid());
 		} else {
-			this.data = new ElegantPlayerData(player.getGameProfile() == null ? "default" : player.getEntityName());
+			this.data = new ElegantPlayerData(player.getGameProfile() == null ? "" : player.getEntityName());
 			ElegantArmourConfig.playerData.put(player.getUuid(), this.data);
 		}
 	}

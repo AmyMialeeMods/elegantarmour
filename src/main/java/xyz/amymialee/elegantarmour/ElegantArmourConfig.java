@@ -15,13 +15,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ElegantArmourConfig {
     private static final File optionsFile = new File(MinecraftClient.getInstance().runDirectory, "config/elegantarmour.json");
     public static ElegantPlayerData defaultSettings = new ElegantPlayerData("Default");
     public static Map<UUID, ElegantPlayerData> playerData = new HashMap<>();
-    public static boolean slimArms = true;
+    public static boolean slimArmSupport = true;
 
     public static ElegantState getState(EquipmentSlot slot) {
         return switch (slot) {
@@ -76,6 +77,7 @@ public class ElegantArmourConfig {
             JsonArray playerJsonArray = new JsonArray();
             for (Map.Entry<UUID, ElegantPlayerData> entry : playerData.entrySet()) {
                 ElegantPlayerData data = entry.getValue();
+                if (Objects.equals(data.getPlayerName(), "default")) continue;
                 JsonObject playerJson = new JsonObject();
                 playerJson.addProperty("uuid", entry.getKey().toString());
                 playerJson.addProperty("name", data.getPlayerName());
@@ -88,7 +90,7 @@ public class ElegantArmourConfig {
                 playerJsonArray.add(playerJson);
             }
             json.add("playerData", playerJsonArray);
-            json.addProperty("slimArms", slimArms);
+            json.addProperty("slimArmSupport", slimArmSupport);
             FileWriter writer = new FileWriter(optionsFile);
             writer.write(gson.toJson(json));
             writer.close();
@@ -120,12 +122,19 @@ public class ElegantArmourConfig {
                 playerData.setSmallArmourState(ElegantState.valueOf(playerJson.get("smallArmour").getAsString()));
                 ElegantArmourConfig.playerData.put(UUID.fromString(playerJson.get("uuid").getAsString()), playerData);
             }
-            slimArms = data.get("slimArms").getAsBoolean();
+            slimArmSupport = data.get("slimArmSupport").getAsBoolean();
+            return;
         } catch (FileNotFoundException e) {
             ElegantArmour.LOGGER.info("Config data not found.");
         } catch (Exception e) {
             ElegantArmour.LOGGER.info("Error loading config data.");
             ElegantArmour.LOGGER.info(e.toString());
         }
+        defaultSettings.setHeadState(ElegantState.SHOW);
+        defaultSettings.setChestState(ElegantState.SHOW);
+        defaultSettings.setLegsState(ElegantState.SHOW);
+        defaultSettings.setFeetState(ElegantState.SHOW);
+        defaultSettings.setElytraState(ElegantState.SHOW);
+        defaultSettings.setSmallArmourState(ElegantState.SHOW);
     }
 }
