@@ -1,2 +1,1 @@
-- Mod Code Overhaul
-- Port to 1.20
+- Fixes a small issue with the Skin Customization button being thin on main menu where the elegant button doesn't show.
