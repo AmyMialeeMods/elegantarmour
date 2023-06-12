@@ -1,1 +1,1 @@
-- Fixes a small issue with the Skin Customization button being thin on main menu where the elegant button doesn't show.
+- Added zh_cn translation (thanks to surfish#5044)

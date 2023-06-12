@@ -71,7 +71,7 @@ public class ElegantOptionsScreen extends Screen {
             this.data.setState(icon.ordinal() - 6, state);
             displayWidget.setValue(state);
         };
-        this.addDrawableChild(new ElegantButtonWidget(this.x + 75 + 18, y, message, this.data, ElegantState.DEFAULT, stateConsumer, icon, Text.translatable(icon == ElegantIcons.SMALL ? ElegantState.DEFAULT.getSmallKey() : ElegantState.DEFAULT.getTranslationKey())));
+        this.addDrawableChild(new ElegantButtonWidget(this.x + 75 + 18, y, message, this.data, ElegantState.DEFAULT, stateConsumer, icon, Text.translatable(ElegantState.DEFAULT.getTranslationKey())));
         this.addDrawableChild(new ElegantButtonWidget(this.x + 75 + 18 + ElegantIcons.OPTION_DEFAULT.getWidth(), y, message, this.data, ElegantState.SHOW, stateConsumer, icon, Text.translatable(icon == ElegantIcons.SMALL ? ElegantState.SHOW.getSmallKey() : ElegantState.SHOW.getTranslationKey())));
         this.addDrawableChild(new ElegantButtonWidget(this.x + 75 + 18 + ElegantIcons.OPTION_DEFAULT.getWidth() * 2, y, message, this.data, ElegantState.HIDE, stateConsumer, icon, Text.translatable(icon == ElegantIcons.SMALL ? ElegantState.HIDE.getSmallKey() : ElegantState.HIDE.getTranslationKey())));
     }

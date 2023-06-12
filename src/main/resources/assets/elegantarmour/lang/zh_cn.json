@@ -1,12 +1,13 @@
 {
   "options.elegantCustomisation": "优雅定制",
   "options.elegantDefault": "默认定制",
+
   "options.elegantarmour.default": "默认",
   "options.elegantarmour.show": "显示",
   "options.elegantarmour.hide": "隐藏",
-  "options.elegantarmour.small.default": "默认",
   "options.elegantarmour.small.show": "禁用",
   "options.elegantarmour.small.hide": "启用",
+
   "options.elegantarmour.helmet": "头盔",
   "options.elegantarmour.chestplate": "胸甲",
   "options.elegantarmour.leggings": "护腿",
