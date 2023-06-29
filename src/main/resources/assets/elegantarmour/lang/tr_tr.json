@@ -1,0 +1,17 @@
+{
+  "options.elegantCustomisation": "Elegant Özelleştirme",
+  "options.elegantDefault": "Varsayılan Özelleştirme",
+
+  "options.elegantarmour.default": "Varsayılan",
+  "options.elegantarmour.show": "Göster",
+  "options.elegantarmour.hide": "Sakla",
+  "options.elegantarmour.small.show": "Kapalı",
+  "options.elegantarmour.small.hide": "Açık",
+
+  "options.elegantarmour.helmet": "Miğfer",
+  "options.elegantarmour.chestplate": "Göğüslük",
+  "options.elegantarmour.leggings": "Pantolon",
+  "options.elegantarmour.boots": "Çizme",
+  "options.elegantarmour.elytra": "Elitra",
+  "options.elegantarmour.small": "Küçük Zırh"
+}
