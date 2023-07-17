@@ -1,1 +1,1 @@
-- Added zh_cn translation (thanks to surfish#5044)
+- More Client/Server issues.

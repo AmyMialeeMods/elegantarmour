@@ -10,6 +10,7 @@ import net.minecraft.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import xyz.amymialee.elegantarmour.ElegantArmour;
+import xyz.amymialee.elegantarmour.ElegantArmourClient;
 import xyz.amymialee.elegantarmour.ElegantArmourConfig;
 import xyz.amymialee.elegantarmour.util.ElegantState;
 
@@ -17,7 +18,7 @@ import xyz.amymialee.elegantarmour.util.ElegantState;
 public class CapeFeatureRendererMixin {
     @WrapOperation(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/client/network/AbstractClientPlayerEntity;FFFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;getEquippedStack(Lnet/minecraft/entity/EquipmentSlot;)Lnet/minecraft/item/ItemStack;"))
     private ItemStack elegantArmour$showCape(AbstractClientPlayerEntity entity, EquipmentSlot slot, Operation<ItemStack> original) {
-        ElegantState state = ElegantArmour.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getEntityName()), ElegantArmour.ARMOUR.get(entity).data, 4);
+        ElegantState state = ElegantArmourClient.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getEntityName()), ElegantArmour.ARMOUR.get(entity).data, 4);
         if (state == ElegantState.HIDE) return new ItemStack(Items.AIR);
         return original.call(entity, slot);
     }

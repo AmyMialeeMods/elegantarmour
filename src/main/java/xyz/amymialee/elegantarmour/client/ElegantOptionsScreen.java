@@ -16,8 +16,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
+import xyz.amymialee.elegantarmour.ElegantArmourClient;
 import xyz.amymialee.elegantarmour.ElegantArmourConfig;
-import xyz.amymialee.elegantarmour.cca.ArmourComponent;
 import xyz.amymialee.elegantarmour.util.ElegantIcons;
 import xyz.amymialee.elegantarmour.util.ElegantPlayerData;
 import xyz.amymialee.elegantarmour.util.ElegantState;
@@ -129,7 +129,7 @@ public class ElegantOptionsScreen extends Screen {
 
         public void setValue(ElegantState value) {
             this.value = value;
-            if (this.isClientPlayer) ArmourComponent.syncC2S();
+            if (this.isClientPlayer) ElegantArmourClient.syncC2S();
             ElegantArmourConfig.saveConfig();
         }
 

@@ -1,8 +1,12 @@
 package xyz.amymialee.elegantarmour;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.Dilation;
 import net.minecraft.client.model.ModelData;
 import net.minecraft.client.model.ModelPartBuilder;
@@ -11,7 +15,13 @@ import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.text.Text;
 import xyz.amymialee.elegantarmour.compat.EarsCompat;
+import xyz.amymialee.elegantarmour.util.ElegantPlayerData;
+import xyz.amymialee.elegantarmour.util.ElegantState;
 
 public class ElegantArmourClient implements ClientModInitializer {
     public static final EntityModelLayer SLIM_BODY_LAYER = new EntityModelLayer(ElegantArmour.id("slim_body_layer"), "main");
@@ -31,6 +41,43 @@ public class ElegantArmourClient implements ClientModInitializer {
             } catch (Throwable ignored) {}
         }
         ElegantArmourConfig.loadConfig();
+        ClientLoginConnectionEvents.INIT.register((networkHandler, client) -> syncC2S());
+    }
+
+    public static ElegantState getMainState(ElegantPlayerData local, ElegantPlayerData server, EquipmentSlot slot) {
+        return switch (slot) {
+            case HEAD -> getMainState(local, server, 0);
+            case CHEST -> getMainState(local, server, 1);
+            case LEGS -> getMainState(local, server, 2);
+            case FEET -> getMainState(local, server, 3);
+            default -> ElegantState.DEFAULT;
+        };
+    }
+
+    public static ElegantState getMainState(ElegantPlayerData local, ElegantPlayerData server, int index) {
+        ElegantState localState = local.getState(index);
+        ElegantState defaultState = ElegantArmourConfig.getState(index);
+        ElegantState serverState = server.getState(index);
+        if (localState != ElegantState.DEFAULT) {
+            return localState;
+        }
+        if (defaultState != ElegantState.DEFAULT) {
+            return defaultState;
+        }
+        return serverState;
+    }
+
+    public static void syncC2S() {
+        PlayerEntity player = MinecraftClient.getInstance().player;
+        if (player == null) return;
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getHeadState().ordinal());
+        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getChestState().ordinal());
+        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getLegsState().ordinal());
+        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getFeetState().ordinal());
+        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getElytraState().ordinal());
+        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getSmallArmourState().ordinal());
+        ClientPlayNetworking.send(ElegantArmour.CLIENT_UPDATE, buf);
     }
 
     public static ModelData getSmallModelData(Dilation dilation, boolean slim) {

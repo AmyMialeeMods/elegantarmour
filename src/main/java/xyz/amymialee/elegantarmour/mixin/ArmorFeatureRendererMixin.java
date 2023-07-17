@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.amymialee.elegantarmour.ElegantArmour;
+import xyz.amymialee.elegantarmour.ElegantArmourClient;
 import xyz.amymialee.elegantarmour.ElegantArmourConfig;
 import xyz.amymialee.elegantarmour.util.ArmourDataHolder;
 import xyz.amymialee.elegantarmour.util.ElegantState;
@@ -37,7 +38,7 @@ public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, A extend
     @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/entity/LivingEntity;FFFFFF)V", at = @At(value = "HEAD"))
     private void elegantArmour$small(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T entity, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
         if (this.isPlayer) {
-            ElegantState state = ElegantArmour.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getEntityName()), ElegantArmour.ARMOUR.get(entity).data, 5);
+            ElegantState state = ElegantArmourClient.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getEntityName()), ElegantArmour.ARMOUR.get(entity).data, 5);
             this.small = state == ElegantState.HIDE;
         }
     }
@@ -45,7 +46,7 @@ public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, A extend
     @Inject(method = "renderArmor", at = @At("HEAD"), cancellable = true)
     private void elegantArmour$newRender(MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, EquipmentSlot slot, int light, A model, CallbackInfo ci) {
         if (this.isPlayer) {
-            ElegantState state = ElegantArmour.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getEntityName()), ElegantArmour.ARMOUR.get(entity).data, slot);
+            ElegantState state = ElegantArmourClient.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getEntityName()), ElegantArmour.ARMOUR.get(entity).data, slot);
             if (state == ElegantState.HIDE) ci.cancel();
         }
     }

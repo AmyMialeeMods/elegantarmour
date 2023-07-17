@@ -17,11 +17,15 @@ public class ArmourComponent implements AutoSyncedComponent {
 	public final ElegantPlayerData data;
 
 	public ArmourComponent(PlayerEntity player) {
-		if (ElegantArmourConfig.playerData.containsKey(player.getUuid())) {
-			this.data = ElegantArmourConfig.playerData.get(player.getUuid());
+		if (player.getWorld().isClient()) {
+			if (ElegantArmourConfig.playerData.containsKey(player.getUuid())) {
+				this.data = ElegantArmourConfig.playerData.get(player.getUuid());
+			} else {
+				this.data = new ElegantPlayerData(player.getGameProfile() == null ? "" : player.getEntityName());
+				ElegantArmourConfig.playerData.put(player.getUuid(), this.data);
+			}
 		} else {
 			this.data = new ElegantPlayerData(player.getGameProfile() == null ? "" : player.getEntityName());
-			ElegantArmourConfig.playerData.put(player.getUuid(), this.data);
 		}
 	}
 
@@ -43,19 +47,6 @@ public class ArmourComponent implements AutoSyncedComponent {
 		tag.putInt("feetState", this.data.getFeetState().ordinal());
 		tag.putInt("elytraState", this.data.getElytraState().ordinal());
 		tag.putInt("smallArmour", this.data.getSmallArmourState().ordinal());
-	}
-
-	public static void syncC2S() {
-		PlayerEntity player = MinecraftClient.getInstance().player;
-		if (player == null) return;
-		PacketByteBuf buf = PacketByteBufs.create();
-		buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getHeadState().ordinal());
-		buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getChestState().ordinal());
-		buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getLegsState().ordinal());
-		buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getFeetState().ordinal());
-		buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getElytraState().ordinal());
-		buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getSmallArmourState().ordinal());
-		ClientPlayNetworking.send(ElegantArmour.CLIENT_UPDATE, buf);
 	}
 
 	public static void handleClientUpdate(ServerPlayerEntity serverPlayerEntity, PacketByteBuf buf) {

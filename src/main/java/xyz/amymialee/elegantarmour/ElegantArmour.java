@@ -32,29 +32,6 @@ public class ElegantArmour implements ModInitializer, EntityComponentInitializer
         registry.beginRegistration(PlayerEntity.class, ARMOUR).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(ArmourComponent::new);
     }
 
-    public static ElegantState getMainState(ElegantPlayerData local, ElegantPlayerData server, EquipmentSlot slot) {
-        return switch (slot) {
-            case HEAD -> getMainState(local, server, 0);
-            case CHEST -> getMainState(local, server, 1);
-            case LEGS -> getMainState(local, server, 2);
-            case FEET -> getMainState(local, server, 3);
-            default -> ElegantState.DEFAULT;
-        };
-    }
-
-    public static ElegantState getMainState(ElegantPlayerData local, ElegantPlayerData server, int index) {
-        ElegantState localState = local.getState(index);
-        ElegantState defaultState = ElegantArmourConfig.getState(index);
-        ElegantState serverState = server.getState(index);
-        if (localState != ElegantState.DEFAULT) {
-            return localState;
-        }
-        if (defaultState != ElegantState.DEFAULT) {
-            return defaultState;
-        }
-        return serverState;
-    }
-
     public static Identifier id(String path) {
         return new Identifier(MOD_ID, path);
     }
