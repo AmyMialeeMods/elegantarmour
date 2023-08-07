@@ -15,8 +15,10 @@ import xyz.amymialee.elegantarmour.util.ElegantState;
 
 public class ArmourComponent implements AutoSyncedComponent {
 	public final ElegantPlayerData data;
+	private final PlayerEntity player;
 
 	public ArmourComponent(PlayerEntity player) {
+		this.player = player;
 		if (player.getWorld().isClient()) {
 			if (ElegantArmourConfig.playerData.containsKey(player.getUuid())) {
 				this.data = ElegantArmourConfig.playerData.get(player.getUuid());
@@ -31,22 +33,21 @@ public class ArmourComponent implements AutoSyncedComponent {
 
 	@Override
 	public void readFromNbt(NbtCompound tag) {
-		this.data.setHeadState(ElegantState.values()[tag.getInt("headState")]);
-		this.data.setChestState(ElegantState.values()[tag.getInt("chestState")]);
-		this.data.setLegsState(ElegantState.values()[tag.getInt("legsState")]);
-		this.data.setFeetState(ElegantState.values()[tag.getInt("feetState")]);
-		this.data.setElytraState(ElegantState.values()[tag.getInt("elytraState")]);
-		this.data.setSmallArmourState(ElegantState.values()[tag.getInt("smallArmour")]);
+		this.data.readFromNbt(tag);
+		ElegantArmour.ARMOUR.sync(this.player);
 	}
 
 	@Override
 	public void writeToNbt(NbtCompound tag) {
-		tag.putInt("headState", this.data.getHeadState().ordinal());
-		tag.putInt("chestState", this.data.getChestState().ordinal());
-		tag.putInt("legsState", this.data.getLegsState().ordinal());
-		tag.putInt("feetState", this.data.getFeetState().ordinal());
-		tag.putInt("elytraState", this.data.getElytraState().ordinal());
-		tag.putInt("smallArmour", this.data.getSmallArmourState().ordinal());
+		this.data.writeToNbt(tag);
+	}
+
+	@Override
+	public void applySyncPacket(PacketByteBuf buf) {
+		NbtCompound tag = buf.readNbt();
+		if (tag != null) {
+			this.data.readFromNbt(tag);
+		}
 	}
 
 	public static void handleClientUpdate(ServerPlayerEntity serverPlayerEntity, PacketByteBuf buf) {
