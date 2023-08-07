@@ -1,0 +1,7 @@
+{
+  "default": false,
+  "editable": "ALLOWED",
+  "components": [
+    "elegantarmour:armour"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+	"switchy.modules.elegantarmour.armour.description": "A module that switches armour customisation from AmyMialee's Elegant Armour.",
+	"switchy.modules.elegantarmour.armour.enabled": "You will have armour customisation settings per-preset.",
+	"switchy.modules.elegantarmour.armour.disabled": "You will have the same armour customisation settings for all presets.",
+	"switchy.modules.elegantarmour.armour.warning": "All other armour customisation settings will be cleared!"
+}
