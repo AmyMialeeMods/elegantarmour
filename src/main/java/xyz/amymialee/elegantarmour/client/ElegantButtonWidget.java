@@ -9,7 +9,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import xyz.amymialee.elegantarmour.ElegantArmour;
 import xyz.amymialee.elegantarmour.util.IEleganttable;
-import xyz.amymialee.mialeemisc.util.MialeeMath;
 
 import java.awt.Color;
 
@@ -31,7 +30,7 @@ public class ElegantButtonWidget extends ButtonWidget {
         IconLocation iconLocation = this.isHovered() ? IconLocation.BOX_HOVER : IconLocation.BOX_DEFAULT;
         this.drawTexture(matrices, this.x, this.y, iconLocation.getU(), iconLocation.getV(), 20, 20);
         if (MinecraftClient.getInstance().player instanceof IEleganttable eleganttable && eleganttable.isElegantEnabled()) {
-            cycle = MialeeMath.clampLoop(cycle + delta, 0, 160);
+            cycle = cycle + delta % 160f;
             Color colour = Color.getHSBColor(cycle / 160f, 0.65f, 1.0f);
             RenderSystem.setShaderColor(colour.getRed() / 255f, colour.getGreen() / 255f, colour.getBlue() / 255f, 1.0F);
         } else {

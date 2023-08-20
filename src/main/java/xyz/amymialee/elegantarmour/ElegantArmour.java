@@ -7,13 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.amymialee.elegantarmour.config.ElegantPart;
 import xyz.amymialee.elegantarmour.util.IEleganttable;
-import xyz.amymialee.mialeemisc.MialeeMisc;
 
 public class ElegantArmour implements ModInitializer {
     public static final String MOD_ID = "elegantarmour";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static final Identifier elegantC2S = MialeeMisc.id("elegant_c2s");
-    public static final Identifier elegantS2C = MialeeMisc.id("elegant_s2c");
+    public static final Identifier elegantC2S = ElegantArmour.id("elegant_c2s");
+    public static final Identifier elegantS2C = ElegantArmour.id("elegant_s2c");
 
     @Override
     public void onInitialize() {
@@ -30,6 +29,6 @@ public class ElegantArmour implements ModInitializer {
     }
 
     public static Identifier id(String... path) {
-        return MialeeMisc.namedId(MOD_ID, path);
+        return new Identifier(MOD_ID, String.join(".", path));
     }
 }
