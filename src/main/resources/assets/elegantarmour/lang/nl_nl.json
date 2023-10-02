@@ -1,0 +1,17 @@
+{
+  "options.elegantCustomisation": "Elegant Maatwerk",
+  "options.elegantDefault": "Standaard Maatwerk",
+
+  "options.elegantarmour.default": "Standaard",
+  "options.elegantarmour.show": "Weergeven",
+  "options.elegantarmour.hide": "Verbergen",
+  "options.elegantarmour.small.show": "Uitgeschakeld",
+  "options.elegantarmour.small.hide": "Ingeschakeld",
+
+  "options.elegantarmour.helmet": "Helm",
+  "options.elegantarmour.chestplate": "Borstplaat",
+  "options.elegantarmour.leggings": "Beenbeschermers",
+  "options.elegantarmour.boots": "Laarzen",
+  "options.elegantarmour.elytra": "Dekschild",
+  "options.elegantarmour.small": "Klein Harnas"
+}
