@@ -98,7 +98,7 @@ public class ElegantOptionsScreen extends Screen {
             }
             drawEntity(context, this.x + 39, this.y + 118, 46, (float) (this.x + 39) - mouseX, (float) (this.y + 46) - mouseY, backupEntity);
         }
-        Text name = Text.literal(this.data.getPlayerName()).append(" ").append(Text.translatable("options.elegantCustomisation"));
+        Text name = this.data == ElegantArmourConfig.defaultSettings ? Text.translatable("options.elegantDefault") : Text.literal(this.data.getPlayerName()).append(" ").append(Text.translatable("options.elegantCustomisation"));
         context.drawText(this.textRenderer, name, this.width / 2 - this.textRenderer.getWidth(name) / 2, this.y + 7, 4210752, false);
         super.render(context, mouseX, mouseY, delta);
     }
