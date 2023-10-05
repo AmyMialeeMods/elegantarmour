@@ -7,14 +7,11 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.amymialee.elegantarmour.cca.ArmourComponent;
-import xyz.amymialee.elegantarmour.util.ElegantPlayerData;
-import xyz.amymialee.elegantarmour.util.ElegantState;
 
 public class ElegantArmour implements ModInitializer, EntityComponentInitializer {
     public static final String MOD_ID = "elegantarmour";
