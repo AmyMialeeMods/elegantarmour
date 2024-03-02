@@ -138,7 +138,7 @@ public class ElegantOptionsScreen extends Screen {
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-            ElegantIcons icon = this.isMouseOver(mouseX, mouseY) ? ElegantIcons.BOX_HOVER : ElegantIcons.BOX_DEFAULT;
+            var icon = this.isMouseOver(mouseX, mouseY) ? ElegantIcons.BOX_HOVER : ElegantIcons.BOX_DEFAULT;
             context.drawTexture(ElegantIcons.ELEGANT_TEXTURE, this.getX(), this.getY(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight());
             if (this.value == ElegantState.HIDE) {
                 RenderSystem.setShaderColor(0.2f, 0.2f, 0.2f, 1.0f);
