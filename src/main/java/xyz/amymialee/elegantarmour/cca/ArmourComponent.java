@@ -50,7 +50,7 @@ public class ArmourComponent implements AutoSyncedComponent {
 	}
 
 	public static void handleClientUpdate(ServerPlayerEntity serverPlayerEntity, PacketByteBuf buf) {
-		ArmourComponent component = ElegantArmour.ARMOUR.get(serverPlayerEntity);
+        var component = ElegantArmour.ARMOUR.get(serverPlayerEntity);
 		component.data.setHeadState(ElegantState.values()[buf.readInt()]);
 		component.data.setChestState(ElegantState.values()[buf.readInt()]);
 		component.data.setLegsState(ElegantState.values()[buf.readInt()]);
