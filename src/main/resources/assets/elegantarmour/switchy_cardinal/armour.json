@@ -1,0 +1,13 @@
+{
+  "icon": {
+    "id": "minecraft:leather_chestplate"
+  },
+  "values": [
+    "elegantarmour:armour.headState",
+    "elegantarmour:armour.chestState",
+    "elegantarmour:armour.legsState",
+    "elegantarmour:armour.feetState",
+    "elegantarmour:armour.elytraState",
+    "elegantarmour:armour.smallArmour"
+  ]
+}

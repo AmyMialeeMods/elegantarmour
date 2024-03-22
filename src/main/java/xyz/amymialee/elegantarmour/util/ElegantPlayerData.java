@@ -1,6 +1,7 @@
 package xyz.amymialee.elegantarmour.util;
 
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.nbt.NbtCompound;
 
 public class ElegantPlayerData {
     private final String playerName;
@@ -10,6 +11,12 @@ public class ElegantPlayerData {
     private ElegantState feetState = ElegantState.DEFAULT;
     private ElegantState elytraState = ElegantState.DEFAULT;
     private ElegantState smallArmourState = ElegantState.DEFAULT;
+    private static final String KEY_HEAD_STATE = "headState"; 
+    private static final String KEY_CHEST_STATE = "chestState"; 
+    private static final String KEY_LEGS_STATE = "legsState"; 
+    private static final String KEY_FEET_STATE = "feetState"; 
+    private static final String KEY_ELYTRA_STATE = "elytraState"; 
+    private static final String KEY_SMALL_ARMOUR_STATE = "smallArmour";
 
     public ElegantPlayerData(String playerName) {
         this.playerName = playerName;
@@ -50,6 +57,24 @@ public class ElegantPlayerData {
             case FEET -> this.feetState;
             default -> ElegantState.DEFAULT;
         };
+    }
+    
+    public void readFromNbt(NbtCompound tag) {
+        setHeadState(ElegantState.values()[tag.getInt(KEY_HEAD_STATE)]);
+        setChestState(ElegantState.values()[tag.getInt(KEY_CHEST_STATE)]);
+        setLegsState(ElegantState.values()[tag.getInt(KEY_LEGS_STATE)]);
+        setFeetState(ElegantState.values()[tag.getInt(KEY_FEET_STATE)]);
+        setElytraState(ElegantState.values()[tag.getInt(KEY_ELYTRA_STATE)]);
+        setSmallArmourState(ElegantState.values()[tag.getInt(KEY_SMALL_ARMOUR_STATE)]);
+    }
+
+    public void writeToNbt(NbtCompound tag) {
+        tag.putInt(KEY_HEAD_STATE, getHeadState().ordinal());
+        tag.putInt(KEY_CHEST_STATE, getChestState().ordinal());
+        tag.putInt(KEY_LEGS_STATE, getLegsState().ordinal());
+        tag.putInt(KEY_FEET_STATE, getFeetState().ordinal());
+        tag.putInt(KEY_ELYTRA_STATE, getElytraState().ordinal());
+        tag.putInt(KEY_SMALL_ARMOUR_STATE, getSmallArmourState().ordinal());
     }
 
     public ElegantState getHeadState() {

@@ -13,5 +13,7 @@
   "options.elegantarmour.leggings": "Leggings",
   "options.elegantarmour.boots": "Boots",
   "options.elegantarmour.elytra": "Elytra",
-  "options.elegantarmour.small": "Slim Armour"
+  "options.elegantarmour.small": "Slim Armour",
+
+  "switchy.modules.elegantarmour.armour.preview.tooltip": "Helmet: %s Chestplate: %s Leggings: %s Boots: %s Elytra: %s Slim: %s"
 }
