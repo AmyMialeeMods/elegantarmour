@@ -1,8 +1,7 @@
 //file:noinspection GroovyAccessibility
 //file:noinspection GrUnresolvedAccess
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
-    id 'io.github.juuxel.loom-quiltflower' version '1.10.0'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'maven-publish'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id "com.modrinth.minotaur" version "2.+"
@@ -11,10 +10,12 @@ plugins {
 version = project.mod_version
 group = project.maven_group
 
+def javaVersion = 17
+
 repositories {
     maven { url "https://maven.ladysnake.org/releases" }
-    maven { url "https://jitpack.io" }
     maven { url "https://repo.unascribed.com" }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -25,21 +26,7 @@ dependencies {
 
     modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}")
     modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}")
-    include( implementation( annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixin_extras_version}")))
     implementation ("com.unascribed:ears-api:1.4.5")
-}
-
-loom {
-    runs {
-        datagen {
-            inherit server
-            name "Data Generation"
-            vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
-            vmArg "-Dfabric-api.datagen.modid=${project.archives_base_name}"
-            runDir "build/datagen"
-        }
-    }
 }
 
 publishing {
@@ -108,20 +95,13 @@ tasks.withType(JavaCompile).configureEach {
 
 java {
     withSourcesJar()
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(javaVersion))
+    }
 }
 
 jar {
     from("LICENSE.md") {
-        rename {"${it}_${project.archives_base_name}.md"}
-    }
-}
-
-sourceSets {
-    main {
-        resources {
-            srcDirs += [
-                    'src/main/generated'
-            ]
-        }
+        rename {"LICENSE_${project.archives_base_name}.md"}
     }
 }
