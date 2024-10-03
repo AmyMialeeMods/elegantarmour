@@ -1,6 +1,6 @@
 {
-  "options.elegantCustomisation": "Elegant Customization",
-  "options.elegantDefault": "Default Customization",
+  "options.elegantCustomisation": "Elegant Customisation",
+  "options.elegantDefault": "Default Customisation",
 
   "options.elegantarmour.default": "Default",
   "options.elegantarmour.show": "Show",
@@ -13,5 +13,5 @@
   "options.elegantarmour.leggings": "Leggings",
   "options.elegantarmour.boots": "Boots",
   "options.elegantarmour.elytra": "Elytra",
-  "options.elegantarmour.small": "Slim Armor"
+  "options.elegantarmour.small": "Slim Armour"
 }
