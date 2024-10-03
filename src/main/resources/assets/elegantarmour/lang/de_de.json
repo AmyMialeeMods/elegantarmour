@@ -1,0 +1,17 @@
+{
+  "options.elegantCustomisation": "Elegante Rüstungs-Einstellungen",
+  "options.elegantDefault": "Standard Rüstungs-Einstellungen",
+
+  "options.elegantarmour.default": "Standard",
+  "options.elegantarmour.show": "Sichtbar",
+  "options.elegantarmour.hide": "Versteckt",
+  "options.elegantarmour.small.show": "Aus",
+  "options.elegantarmour.small.hide": "An",
+
+  "options.elegantarmour.helmet": "Helm",
+  "options.elegantarmour.chestplate": "Harnisch",
+  "options.elegantarmour.leggings": "Beinschutz",
+  "options.elegantarmour.boots": "Stiefel",
+  "options.elegantarmour.elytra": "Elytren",
+  "options.elegantarmour.small": "Schlanke Rüstungen"
+}
