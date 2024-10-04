@@ -22,6 +22,7 @@ import xyz.amymialee.elegantarmour.util.ElegantIcons;
 import xyz.amymialee.elegantarmour.util.ElegantPlayerData;
 import xyz.amymialee.elegantarmour.util.ElegantState;
 
+import java.util.Locale;
 import java.util.function.Consumer;
 
 public class ElegantOptionsScreen extends Screen {
@@ -124,7 +125,7 @@ public class ElegantOptionsScreen extends Screen {
             this.value = value;
             this.icon = icon;
             this.isClientPlayer = isClientPlayer;
-            this.setTooltip(Tooltip.of(Text.translatable("options.elegantarmour." + icon.name().toLowerCase())));
+            this.setTooltip(Tooltip.of(Text.translatable("options.elegantarmour." + icon.name().toLowerCase(Locale.ROOT))));
         }
 
         public void setValue(ElegantState value) {
