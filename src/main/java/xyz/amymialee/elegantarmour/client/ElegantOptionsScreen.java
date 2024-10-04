@@ -5,7 +5,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -24,6 +23,8 @@ import xyz.amymialee.elegantarmour.util.ElegantState;
 
 import java.util.Locale;
 import java.util.function.Consumer;
+
+import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 
 public class ElegantOptionsScreen extends Screen {
     private static ArmorStandEntity backupEntity;
@@ -62,12 +63,12 @@ public class ElegantOptionsScreen extends Screen {
         this.addButtons(isClientPlayer, this.y + 19 + 2 * 18, ElegantIcons.LEGGINGS, "options.elegantarmour.legs");
         this.addButtons(isClientPlayer, this.y + 19 + 3 * 18, ElegantIcons.BOOTS, "options.elegantarmour.feet");
         this.addButtons(isClientPlayer, this.y + 19 + 4 * 18, ElegantIcons.ELYTRA, "options.elegantarmour.elytra");
-        this.addButtons(isClientPlayer, this.y + 19 + 5 * 18, ElegantIcons.SMALL, "options.elegantarmour.small");
+        this.addButtons(isClientPlayer, this.y + 19 + 5 * 18, ElegantIcons.SMALL, "options.elegantarmour.small", true);
     }
 
-    private void addButtons(boolean isClientPlayer, int y, ElegantIcons icon, String key) {
+    private void addButtons(boolean isClientPlayer, int y, ElegantIcons icon, String key, boolean inverted) {
         Text message = Text.translatable(key);
-        ElegantDisplayWidget displayWidget = this.addDrawableChild(new ElegantDisplayWidget(this.x + 75, y, this.data.getState(icon.ordinal() - 6), isClientPlayer, message, icon));
+        ElegantDisplayWidget displayWidget = this.addDrawableChild(new ElegantDisplayWidget(this.x + 75, y, this.data.getState(icon.ordinal() - 6), isClientPlayer, message, icon, inverted));
         Consumer<ElegantState> stateConsumer = state -> {
             this.data.setState(icon.ordinal() - 6, state);
             displayWidget.setValue(state);
@@ -75,6 +76,10 @@ public class ElegantOptionsScreen extends Screen {
         this.addDrawableChild(new ElegantButtonWidget(this.x + 75 + 18, y, message, this.data, ElegantState.DEFAULT, stateConsumer, icon, Text.translatable(ElegantState.DEFAULT.getTranslationKey())));
         this.addDrawableChild(new ElegantButtonWidget(this.x + 75 + 18 + ElegantIcons.OPTION_DEFAULT.getWidth(), y, message, this.data, ElegantState.SHOW, stateConsumer, icon, Text.translatable(icon == ElegantIcons.SMALL ? ElegantState.SHOW.getSmallKey() : ElegantState.SHOW.getTranslationKey())));
         this.addDrawableChild(new ElegantButtonWidget(this.x + 75 + 18 + ElegantIcons.OPTION_DEFAULT.getWidth() * 2, y, message, this.data, ElegantState.HIDE, stateConsumer, icon, Text.translatable(icon == ElegantIcons.SMALL ? ElegantState.HIDE.getSmallKey() : ElegantState.HIDE.getTranslationKey())));
+    }
+
+    private void addButtons(boolean isClientPlayer, int y, ElegantIcons icon, String key) {
+        addButtons(isClientPlayer, y, icon, key, false);
     }
 
     @Override
@@ -119,12 +124,14 @@ public class ElegantOptionsScreen extends Screen {
         private ElegantState value;
         private final ElegantIcons icon;
         private final boolean isClientPlayer;
+        private final boolean inverted;
 
-        public ElegantDisplayWidget(int x, int y, ElegantState value, boolean isClientPlayer, Text message, ElegantIcons icon) {
+        public ElegantDisplayWidget(int x, int y, ElegantState value, boolean isClientPlayer, Text message, ElegantIcons icon, boolean inverted) {
             super(x, y, 18, 18, message);
             this.value = value;
             this.icon = icon;
             this.isClientPlayer = isClientPlayer;
+            this.inverted = inverted;
             this.setTooltip(Tooltip.of(Text.translatable("options.elegantarmour." + icon.name().toLowerCase(Locale.ROOT))));
         }
 
@@ -141,7 +148,7 @@ public class ElegantOptionsScreen extends Screen {
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             var icon = this.isMouseOver(mouseX, mouseY) ? ElegantIcons.BOX_HOVER : ElegantIcons.BOX_DEFAULT;
             context.drawTexture(ElegantIcons.ELEGANT_TEXTURE, this.getX(), this.getY(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight());
-            if (this.value == ElegantState.HIDE) {
+            if (this.value == (this.inverted ? ElegantState.SHOW : ElegantState.HIDE)) {
                 RenderSystem.setShaderColor(0.2f, 0.2f, 0.2f, 1.0f);
             } else if (this.value == ElegantState.DEFAULT) {
                 RenderSystem.setShaderColor(0.65f, 0.65f, 0.65f, 1.0f);
