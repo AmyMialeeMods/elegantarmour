@@ -1,6 +1,7 @@
 package xyz.amymialee.elegantarmour.util;
 
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.network.PacketByteBuf;
 
 public class ElegantPlayerData {
     private final String playerName;
@@ -50,6 +51,25 @@ public class ElegantPlayerData {
             case FEET -> this.feetState;
             default -> ElegantState.DEFAULT;
         };
+    }
+
+    public void setFromBuf(PacketByteBuf buf) {
+        this.setHeadState(ElegantState.values()[buf.readInt()]);
+        this.setChestState(ElegantState.values()[buf.readInt()]);
+        this.setLegsState(ElegantState.values()[buf.readInt()]);
+        this.setFeetState(ElegantState.values()[buf.readInt()]);
+        this.setElytraState(ElegantState.values()[buf.readInt()]);
+        this.setSmallArmourState(ElegantState.values()[buf.readInt()]);
+    }
+
+    public void writeToBuf(PacketByteBuf buf) {
+        // FIXME ideally this would be bytes or varints but we can't change it until a breaking update (e.g. minecraft update)
+        buf.writeInt(this.getHeadState().ordinal());
+        buf.writeInt(this.getChestState().ordinal());
+        buf.writeInt(this.getLegsState().ordinal());
+        buf.writeInt(this.getFeetState().ordinal());
+        buf.writeInt(this.getElytraState().ordinal());
+        buf.writeInt(this.getSmallArmourState().ordinal());
     }
 
     public ElegantState getHeadState() {

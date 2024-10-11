@@ -71,12 +71,7 @@ public class ElegantArmourClient implements ClientModInitializer {
         PlayerEntity player = MinecraftClient.getInstance().player;
         if (player == null) return;
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getHeadState().ordinal());
-        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getChestState().ordinal());
-        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getLegsState().ordinal());
-        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getFeetState().ordinal());
-        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getElytraState().ordinal());
-        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getSmallArmourState().ordinal());
+        ElegantArmourConfig.playerData.get(player.getUuid()).writeToBuf(buf);
         ClientPlayNetworking.send(ElegantArmour.CLIENT_UPDATE, buf);
     }
 

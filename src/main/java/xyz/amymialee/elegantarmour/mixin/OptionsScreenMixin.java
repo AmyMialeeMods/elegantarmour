@@ -44,6 +44,6 @@ public class OptionsScreenMixin extends Screen {
         ButtonWidget buttonWidget = skin.get();
         buttonWidget.setX(buttonWidget.getX() - 10);
         ElegantPlayerData data = ElegantArmourConfig.getOrCreate(this.client.player.getUuid(), this.client.player.getEntityName());
-        this.addDrawableChild(new ElegantMenuWidget(this.width / 2 - 155 + 130, this.height / 6 + 48 - 6, Text.translatable("options.elegantCustomisation"), button -> this.client.setScreen(new ElegantOptionsScreen(this, this.client.player, data)), this.client.player.getUuid()));
+        this.addDrawableChild(new ElegantMenuWidget(this.width / 2 - 155 + 130, this.height / 6 + 48 - 6, Text.translatable("options.elegantCustomisation"), button -> this.client.setScreen(new ElegantOptionsScreen(this, this.client.player, data)), true));
     }
 }
