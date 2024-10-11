@@ -18,16 +18,7 @@ public class ArmourComponent implements AutoSyncedComponent {
 	public final ElegantPlayerData data;
 
 	public ArmourComponent(PlayerEntity player) {
-		if (player.getWorld().isClient()) {
-			if (ElegantArmourConfig.playerData.containsKey(player.getUuid())) {
-				this.data = ElegantArmourConfig.playerData.get(player.getUuid());
-			} else {
-				this.data = new ElegantPlayerData(player.getGameProfile() == null ? "" : player.getEntityName());
-				ElegantArmourConfig.playerData.put(player.getUuid(), this.data);
-			}
-		} else {
-			this.data = new ElegantPlayerData(player.getGameProfile() == null ? "" : player.getEntityName());
-		}
+		this.data = new ElegantPlayerData("");
 	}
 
 	@Override
@@ -54,12 +45,7 @@ public class ArmourComponent implements AutoSyncedComponent {
 	@Override
 	public void applySyncPacket(PacketByteBuf buf) {
 		this.data.setFromBuf(buf);
-
-		// if server is older version, this may be the end of the packet, so we check for that here
-		// FIXME this can be changed after a breaking update, e.g. an MC update
-		if (buf.readableBytes() > 0) {
-			this.hasMod = buf.readBoolean();
-		}
+		this.hasMod = buf.readBoolean();
 	}
 
 	@Override
@@ -73,5 +59,27 @@ public class ArmourComponent implements AutoSyncedComponent {
 		component.data.setFromBuf(buf);
 		component.hasMod = true; // if we've received a client update packet, we know the player has the mod
 		ElegantArmour.ARMOUR.sync(serverPlayerEntity);
+	}
+
+	public static void handleInit(PlayerEntity player) {
+		var component = ElegantArmour.ARMOUR.get(player);
+		if (player.getWorld().isClient()) {
+			if (ElegantArmourConfig.playerData.containsKey(player.getUuid())) {
+				component.data.setFrom(ElegantArmourConfig.playerData.get(player.getUuid()));
+			} else {
+				component.data.setFrom(new ElegantPlayerData(player.getEntityName()));
+				ElegantArmourConfig.playerData.put(player.getUuid(), component.data);
+			}
+		} else {
+			if (ElegantArmour.PENDING_INITIALISATIONS.containsKey(player.getGameProfile().getId())) {
+				ElegantArmour.PENDING_INITIALISATIONS.get(player.getUuid()).ifPresentOrElse(buf -> {
+					component.data.setPlayerName(player.getEntityName());
+					component.data.setFromBuf(buf);
+					buf.release();
+					component.hasMod = true;
+				}, () -> component.hasMod = false);
+				ElegantArmour.PENDING_INITIALISATIONS.remove(player.getUuid());
+			}
+		}
 	}
 }

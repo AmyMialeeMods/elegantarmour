@@ -25,6 +25,7 @@
       "xyz.amymialee.elegantarmour.ElegantArmour"
     ]
   },
+  "accessWidener": "elegantarmour.accesswidener",
   "mixins": [
     "elegantarmour.mixins.json"
   ],

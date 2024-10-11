@@ -2,9 +2,10 @@ package xyz.amymialee.elegantarmour.util;
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.network.PacketByteBuf;
+import xyz.amymialee.elegantarmour.ElegantArmour;
 
 public class ElegantPlayerData {
-    private final String playerName;
+    private String playerName;
     private ElegantState headState = ElegantState.DEFAULT;
     private ElegantState chestState = ElegantState.DEFAULT;
     private ElegantState legsState = ElegantState.DEFAULT;
@@ -13,6 +14,10 @@ public class ElegantPlayerData {
     private ElegantState smallArmourState = ElegantState.DEFAULT;
 
     public ElegantPlayerData(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
 
@@ -54,22 +59,21 @@ public class ElegantPlayerData {
     }
 
     public void setFromBuf(PacketByteBuf buf) {
-        this.setHeadState(ElegantState.values()[buf.readInt()]);
-        this.setChestState(ElegantState.values()[buf.readInt()]);
-        this.setLegsState(ElegantState.values()[buf.readInt()]);
-        this.setFeetState(ElegantState.values()[buf.readInt()]);
-        this.setElytraState(ElegantState.values()[buf.readInt()]);
-        this.setSmallArmourState(ElegantState.values()[buf.readInt()]);
+        this.setHeadState(ElegantState.values()[buf.readByte()]);
+        this.setChestState(ElegantState.values()[buf.readByte()]);
+        this.setLegsState(ElegantState.values()[buf.readByte()]);
+        this.setFeetState(ElegantState.values()[buf.readByte()]);
+        this.setElytraState(ElegantState.values()[buf.readByte()]);
+        this.setSmallArmourState(ElegantState.values()[buf.readByte()]);
     }
 
     public void writeToBuf(PacketByteBuf buf) {
-        // FIXME ideally this would be bytes or varints but we can't change it until a breaking update (e.g. minecraft update)
-        buf.writeInt(this.getHeadState().ordinal());
-        buf.writeInt(this.getChestState().ordinal());
-        buf.writeInt(this.getLegsState().ordinal());
-        buf.writeInt(this.getFeetState().ordinal());
-        buf.writeInt(this.getElytraState().ordinal());
-        buf.writeInt(this.getSmallArmourState().ordinal());
+        buf.writeByte(this.getHeadState().ordinal());
+        buf.writeByte(this.getChestState().ordinal());
+        buf.writeByte(this.getLegsState().ordinal());
+        buf.writeByte(this.getFeetState().ordinal());
+        buf.writeByte(this.getElytraState().ordinal());
+        buf.writeByte(this.getSmallArmourState().ordinal());
     }
 
     public ElegantState getHeadState() {
@@ -118,5 +122,15 @@ public class ElegantPlayerData {
 
     public void setSmallArmourState(ElegantState smallArmourState) {
         this.smallArmourState = smallArmourState;
+    }
+
+    public void setFrom(ElegantPlayerData elegantPlayerData) {
+        this.playerName = elegantPlayerData.playerName;
+        this.headState = elegantPlayerData.headState;
+        this.chestState = elegantPlayerData.chestState;
+        this.legsState = elegantPlayerData.legsState;
+        this.feetState = elegantPlayerData.feetState;
+        this.elytraState = elegantPlayerData.elytraState;
+        this.smallArmourState = elegantPlayerData.smallArmourState;
     }
 }
