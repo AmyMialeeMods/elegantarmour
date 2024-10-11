@@ -14,11 +14,11 @@ import java.util.UUID;
 public class ElegantMenuWidget extends ButtonWidget {
     private static final Identifier ELEGANT_TEXTURE = ElegantArmour.id("textures/gui/widgets.png");
     private static float cycle = 0f;
-    private final UUID uuid;
+    private final boolean shiny;
 
-    public ElegantMenuWidget(int x, int y, Text message, PressAction action, UUID uuid) {
+    public ElegantMenuWidget(int x, int y, Text message, PressAction action, boolean shiny) {
         super(x, y, 20, 20, message, action, DEFAULT_NARRATION_SUPPLIER);
-        this.uuid = uuid;
+        this.shiny = shiny;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ElegantMenuWidget extends ButtonWidget {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, ELEGANT_TEXTURE);
         context.drawTexture(ELEGANT_TEXTURE, this.getX(), this.getY(), 0, !this.isHovered() ? 0 : 20, 20, 20, 64, 64);
-        if (this.uuid != null) {
+        if (this.shiny) {
             cycle = cycle + delta % 160;
             Color colour = Color.getHSBColor(cycle / 160f, 0.65f, 1.0f);
             RenderSystem.setShaderColor(colour.getRed() / 255f, colour.getGreen() / 255f, colour.getBlue() / 255f, 1.0F);

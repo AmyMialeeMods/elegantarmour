@@ -1,7 +1,11 @@
 package xyz.amymialee.elegantarmour;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -19,9 +23,12 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+import xyz.amymialee.elegantarmour.cca.ArmourComponent;
 import xyz.amymialee.elegantarmour.compat.EarsCompat;
 import xyz.amymialee.elegantarmour.util.ElegantPlayerData;
 import xyz.amymialee.elegantarmour.util.ElegantState;
+
+import java.util.concurrent.CompletableFuture;
 
 public class ElegantArmourClient implements ClientModInitializer {
     public static final EntityModelLayer SLIM_BODY_LAYER = new EntityModelLayer(ElegantArmour.id("slim_body_layer"), "main");
@@ -41,7 +48,24 @@ public class ElegantArmourClient implements ClientModInitializer {
             } catch (Throwable ignored) {}
         }
         ElegantArmourConfig.loadConfig();
-        ClientLoginConnectionEvents.INIT.register((networkHandler, client) -> syncC2S());
+        ClientLoginNetworking.registerGlobalReceiver(ElegantArmour.CLIENT_INIT_QUERY, (client, handler, queryBuf, listenerAdder) -> {
+            PacketByteBuf responseBuf = PacketByteBufs.create();
+            var uuid = client.getSession().getUuidOrNull(); // client.player is null at this point, we get uuid from elsewhere
+            String name = client.getSession().getUsername();
+            if (uuid != null) {
+                ElegantArmourConfig.getOrCreate(uuid, name).writeToBuf(responseBuf);
+                return CompletableFuture.completedFuture(responseBuf);
+            }
+
+            // we have no uuid, so we have no data to send
+            return CompletableFuture.completedFuture(null);
+        });
+
+        ClientEntityEvents.ENTITY_LOAD.register((entity, world) -> {
+            if (entity instanceof PlayerEntity player) {
+                ArmourComponent.handleInit(player);
+            }
+        });
     }
 
     public static ElegantState getMainState(ElegantPlayerData local, ElegantPlayerData server, EquipmentSlot slot) {
@@ -71,12 +95,7 @@ public class ElegantArmourClient implements ClientModInitializer {
         PlayerEntity player = MinecraftClient.getInstance().player;
         if (player == null) return;
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getHeadState().ordinal());
-        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getChestState().ordinal());
-        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getLegsState().ordinal());
-        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getFeetState().ordinal());
-        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getElytraState().ordinal());
-        buf.writeInt(ElegantArmourConfig.playerData.get(player.getUuid()).getSmallArmourState().ordinal());
+        ElegantArmourConfig.playerData.get(player.getUuid()).writeToBuf(buf);
         ClientPlayNetworking.send(ElegantArmour.CLIENT_UPDATE, buf);
     }
 
