@@ -58,7 +58,7 @@ public class ElegantArmourConfig {
         if (playerData.containsKey(uuid)) {
             return playerData.get(uuid);
         } else {
-            ElegantPlayerData data = new ElegantPlayerData(string);
+            var data = new ElegantPlayerData(string);
             playerData.put(uuid, data);
             return data;
         }
@@ -66,19 +66,19 @@ public class ElegantArmourConfig {
 
     public static void saveConfig() {
         try {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            JsonObject json = new JsonObject();
+            var gson = new GsonBuilder().setPrettyPrinting().create();
+            var json = new JsonObject();
             json.addProperty("defaultHead", defaultSettings.getHeadState().name());
             json.addProperty("defaultChest", defaultSettings.getChestState().name());
             json.addProperty("defaultLegs", defaultSettings.getLegsState().name());
             json.addProperty("defaultFeet", defaultSettings.getFeetState().name());
             json.addProperty("defaultElytra", defaultSettings.getElytraState().name());
             json.addProperty("defaultSmallArmour", defaultSettings.getSmallArmourState().name());
-            JsonArray playerJsonArray = new JsonArray();
-            for (Map.Entry<UUID, ElegantPlayerData> entry : playerData.entrySet()) {
-                ElegantPlayerData data = entry.getValue();
+            var playerJsonArray = new JsonArray();
+            for (var entry : playerData.entrySet()) {
+                var data = entry.getValue();
                 if (Objects.equals(data.getPlayerName(), "default")) continue;
-                JsonObject playerJson = new JsonObject();
+                var playerJson = new JsonObject();
                 playerJson.addProperty("uuid", entry.getKey().toString());
                 playerJson.addProperty("name", data.getPlayerName());
                 playerJson.addProperty("headState", data.getHeadState().name());
@@ -91,7 +91,7 @@ public class ElegantArmourConfig {
             }
             json.add("playerData", playerJsonArray);
             json.addProperty("slimArmSupport", slimArmSupport);
-            FileWriter writer = new FileWriter(optionsFile);
+            var writer = new FileWriter(optionsFile);
             writer.write(gson.toJson(json));
             writer.close();
         } catch (Exception e) {
@@ -101,19 +101,19 @@ public class ElegantArmourConfig {
 
     public static void loadConfig() {
         try {
-            Gson gson = new Gson();
-            FileReader reader = new FileReader(optionsFile);
-            JsonObject data = gson.fromJson(reader, JsonObject.class);
+            var gson = new Gson();
+            var reader = new FileReader(optionsFile);
+            var data = gson.fromJson(reader, JsonObject.class);
             defaultSettings.setHeadState(ElegantState.valueOf(data.get("defaultHead").getAsString()));
             defaultSettings.setChestState(ElegantState.valueOf(data.get("defaultChest").getAsString()));
             defaultSettings.setLegsState(ElegantState.valueOf(data.get("defaultLegs").getAsString()));
             defaultSettings.setFeetState(ElegantState.valueOf(data.get("defaultFeet").getAsString()));
             defaultSettings.setElytraState(ElegantState.valueOf(data.get("defaultElytra").getAsString()));
             defaultSettings.setSmallArmourState(ElegantState.valueOf(data.get("defaultSmallArmour").getAsString()));
-            JsonArray playerJsonArray = data.get("playerData").getAsJsonArray();
-            for (int i = 0; i < playerJsonArray.size(); i++) {
-                JsonObject playerJson = playerJsonArray.get(i).getAsJsonObject();
-                ElegantPlayerData playerData = new ElegantPlayerData(playerJson.get("name").getAsString());
+            var playerJsonArray = data.get("playerData").getAsJsonArray();
+            for (var i = 0; i < playerJsonArray.size(); i++) {
+                var playerJson = playerJsonArray.get(i).getAsJsonObject();
+                var playerData = new ElegantPlayerData(playerJson.get("name").getAsString());
                 playerData.setHeadState(ElegantState.valueOf(playerJson.get("headState").getAsString()));
                 playerData.setChestState(ElegantState.valueOf(playerJson.get("chestState").getAsString()));
                 playerData.setLegsState(ElegantState.valueOf(playerJson.get("legsState").getAsString()));

@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.amymialee.elegantarmour.ElegantArmourConfig;
 import xyz.amymialee.elegantarmour.client.ElegantMenuWidget;
 import xyz.amymialee.elegantarmour.client.ElegantOptionsScreen;
-import xyz.amymialee.elegantarmour.util.ElegantPlayerData;
 
 import java.util.function.Supplier;
 
@@ -26,8 +26,8 @@ public class OptionsScreenMixin extends Screen {
     }
 
     @WrapOperation(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/option/OptionsScreen;createButton(Lnet/minecraft/text/Text;Ljava/util/function/Supplier;)Lnet/minecraft/client/gui/widget/ButtonWidget;", ordinal = 0))
-    private ButtonWidget elegantArmour$smallSkinOptions(OptionsScreen optionsScreen, Text message, Supplier<Screen> screenSupplier, Operation<ButtonWidget> original, @Share("button") LocalRef<ButtonWidget> button) {
-        ButtonWidget buttonWidget = original.call(optionsScreen, message, screenSupplier);
+    private ButtonWidget elegantArmour$smallSkinOptions(OptionsScreen optionsScreen, Text message, Supplier<Screen> screenSupplier, @NotNull Operation<ButtonWidget> original, @Share("button") LocalRef<ButtonWidget> button) {
+        var buttonWidget = original.call(optionsScreen, message, screenSupplier);
         if (this.client == null || this.client.getSession() == null || this.client.player == null) {
             return buttonWidget;
         }
@@ -41,9 +41,9 @@ public class OptionsScreenMixin extends Screen {
         if (this.client == null || this.client.getSession() == null || this.client.player == null) {
             return;
         }
-        ButtonWidget buttonWidget = skin.get();
+        var buttonWidget = skin.get();
         buttonWidget.setX(buttonWidget.getX() - 10);
-        ElegantPlayerData data = ElegantArmourConfig.getOrCreate(this.client.player.getUuid(), this.client.player.getEntityName());
+        var data = ElegantArmourConfig.getOrCreate(this.client.player.getUuid(), this.client.player.getEntityName());
         this.addDrawableChild(new ElegantMenuWidget(this.width / 2 - 155 + 130, this.height / 6 + 48 - 6, Text.translatable("options.elegantCustomisation"), button -> this.client.setScreen(new ElegantOptionsScreen(this, this.client.player, data)), true));
     }
 }

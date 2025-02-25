@@ -27,7 +27,7 @@ public abstract class PlayerEntityRendererMixin<T extends LivingEntity, M extend
     @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/PlayerEntityRenderer;addFeature(Lnet/minecraft/client/render/entity/feature/FeatureRenderer;)Z", ordinal = 0))
     private boolean elegantArmour$armourData(PlayerEntityRenderer renderer, FeatureRenderer<T, M> feature, Operation<Boolean> operation, @Local(ordinal = 0) EntityRendererFactory.Context ctx, @Local(ordinal = 0) boolean slim) {
         if (feature instanceof ArmourDataHolder holder) {
-            holder.setArmourData(new ArmorEntityModel<>(ctx.getPart(ElegantArmourClient.SLIM_BODY_LAYER)), new ArmorEntityModel<>(ctx.getPart(ElegantArmourClient.SMALL_BODY_LAYER)), new ArmorEntityModel<>(ctx.getPart(ElegantArmourClient.SMALL_SLIM_BODY_LAYER)), new ArmorEntityModel<>(ctx.getPart(ElegantArmourClient.SMALL_LEGS_LAYER)), slim);
+            holder.elegantarmour$setArmourData(new ArmorEntityModel<>(ctx.getPart(ElegantArmourClient.SLIM_BODY_LAYER)), new ArmorEntityModel<>(ctx.getPart(ElegantArmourClient.SMALL_BODY_LAYER)), new ArmorEntityModel<>(ctx.getPart(ElegantArmourClient.SMALL_SLIM_BODY_LAYER)), new ArmorEntityModel<>(ctx.getPart(ElegantArmourClient.SMALL_LEGS_LAYER)), slim);
         }
         return operation.call(renderer, feature);
     }

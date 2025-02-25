@@ -22,7 +22,6 @@ import xyz.amymialee.elegantarmour.ElegantArmour;
 import xyz.amymialee.elegantarmour.ElegantArmourConfig;
 import xyz.amymialee.elegantarmour.client.ElegantMenuWidget;
 import xyz.amymialee.elegantarmour.client.ElegantOptionsScreen;
-import xyz.amymialee.elegantarmour.util.ElegantPlayerData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class SocialInteractionsPlayerListEntryMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void elegantArmour$button(MinecraftClient client, SocialInteractionsScreen parent, UUID uuid, String name, Supplier<Identifier> skinTexture, boolean reportable, CallbackInfo ci) {
         if (this.buttons.isEmpty()) this.buttons = new ArrayList<>();
-        ElegantPlayerData data = ElegantArmourConfig.getOrCreate(uuid, name);
+        var data = ElegantArmourConfig.getOrCreate(uuid, name);
         PlayerEntity player;
         if (client.world != null) {
             player = client.world.getPlayerByUuid(uuid);

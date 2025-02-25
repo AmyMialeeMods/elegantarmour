@@ -38,7 +38,7 @@ public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, A extend
     @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/entity/LivingEntity;FFFFFF)V", at = @At(value = "HEAD"))
     private void elegantArmour$small(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T entity, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
         if (this.isPlayer) {
-            ElegantState state = ElegantArmourClient.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getEntityName()), ElegantArmour.ARMOUR.get(entity).data, 5);
+            var state = ElegantArmourClient.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getEntityName()), ElegantArmour.ARMOUR.get(entity).data, 5);
             this.small = state == ElegantState.HIDE;
         }
     }
@@ -46,7 +46,7 @@ public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, A extend
     @Inject(method = "renderArmor", at = @At("HEAD"), cancellable = true)
     private void elegantArmour$newRender(MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, EquipmentSlot slot, int light, A model, CallbackInfo ci) {
         if (this.isPlayer) {
-            ElegantState state = ElegantArmourClient.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getEntityName()), ElegantArmour.ARMOUR.get(entity).data, slot);
+            var state = ElegantArmourClient.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getEntityName()), ElegantArmour.ARMOUR.get(entity).data, slot);
             if (state == ElegantState.HIDE) ci.cancel();
         }
     }
@@ -69,15 +69,15 @@ public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, A extend
     @Inject(method = "getArmorTexture", at = @At("HEAD"), cancellable = true)
     private void elegantArmour$getTexture(ArmorItem item, boolean secondLayer, String overlay, CallbackInfoReturnable<Identifier> cir) {
         if (this.slim && !secondLayer) {
-            String string = "textures/models/armor/" + item.getMaterial().getName() + "_layer_" + 1 + (overlay == null ? "" : "_" + overlay) + ".png";
+            var string = "textures/models/armor/" + item.getMaterial().getName() + "_layer_" + 1 + (overlay == null ? "" : "_" + overlay) + ".png";
             if (SLIM_ARMOR_TEXTURE_CACHE.containsKey(string)) {
-                Identifier id = SLIM_ARMOR_TEXTURE_CACHE.get(string);
+                var id = SLIM_ARMOR_TEXTURE_CACHE.get(string);
                 if (id != null) {
                     cir.setReturnValue(id);
                     return;
                 }
             }
-            Identifier id = ElegantArmour.id(string);
+            var id = ElegantArmour.id(string);
             if (MinecraftClient.getInstance().getResourceManager().getResource(id).isPresent()) {
                 SLIM_ARMOR_TEXTURE_CACHE.put(string, id);
                 cir.setReturnValue(id);
@@ -88,7 +88,7 @@ public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, A extend
     }
 
     @Unique @Override
-    public void setArmourData(A slimBodyModel, A smallBodyModel, A smallSlimBodyModel, A smallLeggingsModel, boolean slim) {
+    public void elegantarmour$setArmourData(A slimBodyModel, A smallBodyModel, A smallSlimBodyModel, A smallLeggingsModel, boolean slim) {
         this.slimBodyModel = slimBodyModel;
         this.smallBodyModel = smallBodyModel;
         this.smallSlimBodyModel = smallSlimBodyModel;

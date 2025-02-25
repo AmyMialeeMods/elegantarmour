@@ -2,7 +2,6 @@ package xyz.amymialee.elegantarmour.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -52,12 +51,7 @@ public class ElegantOptionsScreen extends Screen {
     protected void init() {
         this.x = (this.width / 2) - (ElegantIcons.BACKGROUND.getWidth() / 2);
         this.y = (this.height / 2) - (ElegantIcons.BACKGROUND.getHeight() / 2);
-        boolean isClientPlayer = false;
-        if (this.client != null && this.client.player != null) {
-            if (this.client.player == this.player) {
-                isClientPlayer = true;
-            }
-        }
+        var isClientPlayer = this.client != null && this.client.player != null && this.client.player == this.player;
         this.addButtons(isClientPlayer, this.y + 19, ElegantIcons.HELMET, "options.elegantarmour.head");
         this.addButtons(isClientPlayer, this.y + 19 + 18, ElegantIcons.CHESTPLATE, "options.elegantarmour.chest");
         this.addButtons(isClientPlayer, this.y + 19 + 2 * 18, ElegantIcons.LEGGINGS, "options.elegantarmour.legs");
@@ -68,7 +62,7 @@ public class ElegantOptionsScreen extends Screen {
 
     private void addButtons(boolean isClientPlayer, int y, ElegantIcons icon, String key, boolean inverted) {
         Text message = Text.translatable(key);
-        ElegantDisplayWidget displayWidget = this.addDrawableChild(new ElegantDisplayWidget(this.x + 75, y, this.data.getState(icon.ordinal() - 6), isClientPlayer, message, icon, inverted));
+        var displayWidget = this.addDrawableChild(new ElegantDisplayWidget(this.x + 75, y, this.data.getState(icon.ordinal() - 6), isClientPlayer, message, icon, inverted));
         Consumer<ElegantState> stateConsumer = state -> {
             this.data.setState(icon.ordinal() - 6, state);
             displayWidget.setValue(state);
@@ -79,15 +73,22 @@ public class ElegantOptionsScreen extends Screen {
     }
 
     private void addButtons(boolean isClientPlayer, int y, ElegantIcons icon, String key) {
-        addButtons(isClientPlayer, y, icon, key, false);
+        this.addButtons(isClientPlayer, y, icon, key, false);
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context);
+        this.renderBackground(context, mouseX, mouseY, delta);
         context.drawTexture(ElegantIcons.ELEGANT_TEXTURE, this.x, this.y, 0, 0, ElegantIcons.BACKGROUND.getWidth(), ElegantIcons.BACKGROUND.getHeight());
+        Text name = this.data == ElegantArmourConfig.defaultSettings ? Text.translatable("options.elegantDefault") : Text.literal(this.data.getPlayerName()).append(" ").append(Text.translatable("options.elegantCustomisation"));
+        context.drawText(this.textRenderer, name, this.width / 2 - this.textRenderer.getWidth(name) / 2, this.y + 7, 4210752, false);
+        for (var drawable : this.drawables) drawable.render(context, mouseX, mouseY, delta);
+        var x1 = this.x + 9;
+        var y1 = this.y + 20;
+        var x2 = this.x + 69;
+        var y2 = this.y + 126;
         if (this.player != null) {
-            drawEntity(context, this.x + 39, this.y + 118, 46, (float) (this.x + 39) - mouseX, (float) (this.y + 46) - mouseY, this.player);
+            drawEntity(context, x1, y1, x2, y2, 46, 0.075F, mouseX, mouseY + 24f, this.player);
         } else if (this.client != null && this.client.world != null && this.client.player != null) {
             if (backupEntity == null) {
                 backupEntity = new ArmorStandEntity(this.client.world, this.client.player.getX(), this.client.player.getY(), this.client.player.getZ());
@@ -102,16 +103,13 @@ public class ElegantOptionsScreen extends Screen {
                 backupEntity.setHideBasePlate(true);
                 backupEntity.setShowArms(true);
             }
-            drawEntity(context, this.x + 39, this.y + 118, 46, (float) (this.x + 39) - mouseX, (float) (this.y + 46) - mouseY, backupEntity);
+            drawEntity(context, x1, y1, x2, y2, 46, 0.075F, mouseX, mouseY + 24f, backupEntity);
         }
-        Text name = this.data == ElegantArmourConfig.defaultSettings ? Text.translatable("options.elegantDefault") : Text.literal(this.data.getPlayerName()).append(" ").append(Text.translatable("options.elegantCustomisation"));
-        context.drawText(this.textRenderer, name, this.width / 2 - this.textRenderer.getWidth(name) / 2, this.y + 7, 4210752, false);
-        super.render(context, mouseX, mouseY, delta);
     }
 
     private boolean shouldShow(int index) {
-        ElegantState state = this.data.getState(index);
-        ElegantState configState = ElegantArmourConfig.getState(index);
+        var state = this.data.getState(index);
+        var configState = ElegantArmourConfig.getState(index);
         if (configState == ElegantState.HIDE) {
             return false;
         } else if (configState == ElegantState.DEFAULT) {
@@ -126,7 +124,7 @@ public class ElegantOptionsScreen extends Screen {
         private final boolean isClientPlayer;
         private final boolean inverted;
 
-        public ElegantDisplayWidget(int x, int y, ElegantState value, boolean isClientPlayer, Text message, ElegantIcons icon, boolean inverted) {
+        public ElegantDisplayWidget(int x, int y, ElegantState value, boolean isClientPlayer, Text message, @NotNull ElegantIcons icon, boolean inverted) {
             super(x, y, 18, 18, message);
             this.value = value;
             this.icon = icon;
@@ -142,7 +140,7 @@ public class ElegantOptionsScreen extends Screen {
         }
 
         @Override
-        public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+        public void renderButton(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -179,7 +177,7 @@ public class ElegantOptionsScreen extends Screen {
 
         @Override
         public void onPress() {
-            boolean selected = this.data.getState(this.icon.ordinal() - 6) == this.value;
+            var selected = this.data.getState(this.icon.ordinal() - 6) == this.value;
             if (!selected) {
                 this.callback.accept(this.value);
                 backupEntity = null;
@@ -191,10 +189,10 @@ public class ElegantOptionsScreen extends Screen {
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-            boolean selected = this.data.getState(this.icon.ordinal() - 6) == this.value;
-            ElegantIcons icon = selected ? ElegantIcons.OPTION_SELECTED : this.isMouseOver(mouseX, mouseY) ? ElegantIcons.OPTION_HOVER : ElegantIcons.OPTION_DEFAULT;
+            var selected = this.data.getState(this.icon.ordinal() - 6) == this.value;
+            var icon = selected ? ElegantIcons.OPTION_SELECTED : this.isMouseOver(mouseX, mouseY) ? ElegantIcons.OPTION_HOVER : ElegantIcons.OPTION_DEFAULT;
             context.drawTexture(ElegantIcons.ELEGANT_TEXTURE, this.getX(), this.getY(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight());
-            TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+            var textRenderer = MinecraftClient.getInstance().textRenderer;
             context.drawTextWrapped(MinecraftClient.getInstance().textRenderer, this.text, this.getX() + ElegantIcons.OPTION_DEFAULT.getWidth() / 2 - textRenderer.getWidth(this.text) / 2, this.getY() + textRenderer.getWrappedLinesHeight(this.text, ElegantIcons.OPTION_DEFAULT.getWidth()) / 2 + 1, ElegantIcons.OPTION_DEFAULT.getWidth(), (6839882 & 16711422) >> 1);
         }
 

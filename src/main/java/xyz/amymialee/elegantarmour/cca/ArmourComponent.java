@@ -1,13 +1,11 @@
 package xyz.amymialee.elegantarmour.cca;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.elegantarmour.ElegantArmour;
 import xyz.amymialee.elegantarmour.ElegantArmourConfig;
 import xyz.amymialee.elegantarmour.util.ElegantPlayerData;
@@ -22,7 +20,7 @@ public class ArmourComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(@NotNull NbtCompound tag) {
 		this.data.setHeadState(ElegantState.values()[tag.getInt("headState")]);
 		this.data.setChestState(ElegantState.values()[tag.getInt("chestState")]);
 		this.data.setLegsState(ElegantState.values()[tag.getInt("legsState")]);
@@ -33,7 +31,7 @@ public class ArmourComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(@NotNull NbtCompound tag) {
 		tag.putInt("headState", this.data.getHeadState().ordinal());
 		tag.putInt("chestState", this.data.getChestState().ordinal());
 		tag.putInt("legsState", this.data.getLegsState().ordinal());

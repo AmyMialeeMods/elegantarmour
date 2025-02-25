@@ -6,10 +6,10 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.elegantarmour.ElegantArmour;
 
 import java.awt.Color;
-import java.util.UUID;
 
 public class ElegantMenuWidget extends ButtonWidget {
     private static final Identifier ELEGANT_TEXTURE = ElegantArmour.id("textures/gui/widgets.png");
@@ -22,7 +22,7 @@ public class ElegantMenuWidget extends ButtonWidget {
     }
 
     @Override
-    public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void renderButton(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -31,7 +31,7 @@ public class ElegantMenuWidget extends ButtonWidget {
         context.drawTexture(ELEGANT_TEXTURE, this.getX(), this.getY(), 0, !this.isHovered() ? 0 : 20, 20, 20, 64, 64);
         if (this.shiny) {
             cycle = cycle + delta % 160;
-            Color colour = Color.getHSBColor(cycle / 160f, 0.65f, 1.0f);
+            var colour = Color.getHSBColor(cycle / 160f, 0.65f, 1.0f);
             RenderSystem.setShaderColor(colour.getRed() / 255f, colour.getGreen() / 255f, colour.getBlue() / 255f, 1.0F);
         }
         context.drawTexture(ELEGANT_TEXTURE, this.getX(), this.getY(), 0, 40, 20, 20, 64, 64);

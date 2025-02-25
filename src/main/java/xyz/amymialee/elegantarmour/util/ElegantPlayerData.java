@@ -2,7 +2,6 @@ package xyz.amymialee.elegantarmour.util;
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.network.PacketByteBuf;
-import xyz.amymialee.elegantarmour.ElegantArmour;
 
 public class ElegantPlayerData {
     private String playerName;

@@ -6,8 +6,6 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
@@ -17,12 +15,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Uuids;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.amymialee.elegantarmour.cca.ArmourComponent;
-import xyz.amymialee.elegantarmour.util.ElegantPlayerData;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,7 +30,7 @@ public class ElegantArmour implements ModInitializer, EntityComponentInitializer
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final Identifier CLIENT_UPDATE = id("client_update");
     public static final Identifier CLIENT_INIT_QUERY = id("client_init_query");
-    public static final ComponentKey<ArmourComponent> ARMOUR = ComponentRegistry.getOrCreate(ElegantArmour.id("armour"), ArmourComponent.class);
+    public static final ComponentKey<ArmourComponent> ARMOUR = ComponentRegistry.getOrCreate(id("armour"), ArmourComponent.class);
     public static final Map<UUID, Optional<PacketByteBuf>> PENDING_INITIALISATIONS = new ConcurrentHashMap<>();
 
     @Override
@@ -48,7 +45,7 @@ public class ElegantArmour implements ModInitializer, EntityComponentInitializer
                 // pending initialisation is retrieved
                 synchronizer.waitFor(server.submit(() -> {
                     // player does not exist yet, so we defer the actual initialisation
-                    UUID uuid = Uuids.getUuidFromProfile(handler.profile);
+                    var uuid = handler.profile.getId();
                     if (understood) {
                         PENDING_INITIALISATIONS.put(uuid, Optional.of(PacketByteBufs.copy(buf)));
                     } else {
@@ -67,11 +64,11 @@ public class ElegantArmour implements ModInitializer, EntityComponentInitializer
     }
 
     @Override
-    public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
+    public void registerEntityComponentFactories(@NotNull EntityComponentFactoryRegistry registry) {
         registry.beginRegistration(PlayerEntity.class, ARMOUR).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(ArmourComponent::new);
     }
 
-    public static Identifier id(String path) {
+    public static @NotNull Identifier id(String path) {
         return new Identifier(MOD_ID, path);
     }
 }
