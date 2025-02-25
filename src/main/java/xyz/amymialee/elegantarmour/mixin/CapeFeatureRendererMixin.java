@@ -19,7 +19,7 @@ import xyz.amymialee.elegantarmour.util.ElegantState;
 public class CapeFeatureRendererMixin {
     @WrapOperation(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/client/network/AbstractClientPlayerEntity;FFFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;getEquippedStack(Lnet/minecraft/entity/EquipmentSlot;)Lnet/minecraft/item/ItemStack;"))
     private ItemStack elegantArmour$showCape(@NotNull AbstractClientPlayerEntity entity, EquipmentSlot slot, Operation<ItemStack> original) {
-        var state = ElegantArmourClient.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getEntityName()), ElegantArmour.ARMOUR.get(entity).data, 4);
+        var state = ElegantArmourClient.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getNameForScoreboard()), ElegantArmour.ARMOUR.get(entity).data, 4);
         if (state == ElegantState.HIDE) return new ItemStack(Items.AIR);
         return original.call(entity, slot);
     }

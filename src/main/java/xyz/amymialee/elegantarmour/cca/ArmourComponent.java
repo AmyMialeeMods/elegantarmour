@@ -65,13 +65,13 @@ public class ArmourComponent implements AutoSyncedComponent {
 			if (ElegantArmourConfig.playerData.containsKey(player.getUuid())) {
 				component.data.setFrom(ElegantArmourConfig.playerData.get(player.getUuid()));
 			} else {
-				component.data.setFrom(new ElegantPlayerData(player.getEntityName()));
+				component.data.setFrom(new ElegantPlayerData(player.getNameForScoreboard()));
 				ElegantArmourConfig.playerData.put(player.getUuid(), component.data);
 			}
 		} else {
 			if (ElegantArmour.PENDING_INITIALISATIONS.containsKey(player.getGameProfile().getId())) {
 				ElegantArmour.PENDING_INITIALISATIONS.get(player.getUuid()).ifPresentOrElse(buf -> {
-					component.data.setPlayerName(player.getEntityName());
+					component.data.setPlayerName(player.getNameForScoreboard());
 					component.data.setFromBuf(buf);
 					buf.release();
 					component.hasMod = true;

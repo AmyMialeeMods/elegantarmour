@@ -22,7 +22,7 @@ public class ElegantMenuWidget extends ButtonWidget {
     }
 
     @Override
-    public void renderButton(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

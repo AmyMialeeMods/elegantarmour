@@ -20,7 +20,7 @@ public class HeadFeatureRendererMixin<T extends LivingEntity> {
     @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/entity/LivingEntity;FFFFFF)V", at = @At("HEAD"), cancellable = true)
     private void elegantArmour$dontRender(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T entity, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
         if (entity instanceof PlayerEntity) {
-            var state = ElegantArmourClient.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getEntityName()), ElegantArmour.ARMOUR.get(entity).data, EquipmentSlot.HEAD);
+            var state = ElegantArmourClient.getMainState(ElegantArmourConfig.getOrCreate(entity.getUuid(), entity.getNameForScoreboard()), ElegantArmour.ARMOUR.get(entity).data, EquipmentSlot.HEAD);
             if (state == ElegantState.HIDE) ci.cancel();
         }
     }

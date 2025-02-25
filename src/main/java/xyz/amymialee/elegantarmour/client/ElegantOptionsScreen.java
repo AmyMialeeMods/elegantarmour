@@ -140,7 +140,7 @@ public class ElegantOptionsScreen extends Screen {
         }
 
         @Override
-        public void renderButton(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
+        protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -185,7 +185,7 @@ public class ElegantOptionsScreen extends Screen {
         }
 
         @Override
-        public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+        protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
