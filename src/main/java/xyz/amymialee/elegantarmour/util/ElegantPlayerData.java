@@ -2,6 +2,7 @@ package xyz.amymialee.elegantarmour.util;
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.network.PacketByteBuf;
+import org.jetbrains.annotations.NotNull;
 
 public class ElegantPlayerData {
     private String playerName;
@@ -47,7 +48,7 @@ public class ElegantPlayerData {
         }
     }
 
-    public ElegantState getState(EquipmentSlot slot) {
+    public ElegantState getState(@NotNull EquipmentSlot slot) {
         return switch (slot) {
             case HEAD -> this.headState;
             case CHEST -> this.chestState;
@@ -57,22 +58,24 @@ public class ElegantPlayerData {
         };
     }
 
-    public void setFromBuf(PacketByteBuf buf) {
-        this.setHeadState(ElegantState.values()[buf.readByte()]);
-        this.setChestState(ElegantState.values()[buf.readByte()]);
-        this.setLegsState(ElegantState.values()[buf.readByte()]);
-        this.setFeetState(ElegantState.values()[buf.readByte()]);
-        this.setElytraState(ElegantState.values()[buf.readByte()]);
-        this.setSmallArmourState(ElegantState.values()[buf.readByte()]);
+    public void setFromBytes(byte head, byte chest, byte legs, byte feet, byte elytra, byte smallArmour) {
+        this.setHeadState(ElegantState.values()[head]);
+        this.setChestState(ElegantState.values()[chest]);
+        this.setLegsState(ElegantState.values()[legs]);
+        this.setFeetState(ElegantState.values()[feet]);
+        this.setElytraState(ElegantState.values()[elytra]);
+        this.setSmallArmourState(ElegantState.values()[smallArmour]);
     }
 
-    public void writeToBuf(PacketByteBuf buf) {
-        buf.writeByte(this.getHeadState().ordinal());
-        buf.writeByte(this.getChestState().ordinal());
-        buf.writeByte(this.getLegsState().ordinal());
-        buf.writeByte(this.getFeetState().ordinal());
-        buf.writeByte(this.getElytraState().ordinal());
-        buf.writeByte(this.getSmallArmourState().ordinal());
+    public byte[] writeToBytes() {
+        var bytes = new byte[6];
+        bytes[0] = (byte) this.getHeadState().ordinal();
+        bytes[1] = (byte) this.getChestState().ordinal();
+        bytes[2] = (byte) this.getLegsState().ordinal();
+        bytes[3] = (byte) this.getFeetState().ordinal();
+        bytes[4] = (byte) this.getElytraState().ordinal();
+        bytes[5] = (byte) this.getSmallArmourState().ordinal();
+        return bytes;
     }
 
     public ElegantState getHeadState() {

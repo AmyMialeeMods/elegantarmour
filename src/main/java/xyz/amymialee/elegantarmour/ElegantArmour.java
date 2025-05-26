@@ -1,10 +1,5 @@
 package xyz.amymialee.elegantarmour;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
-import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -14,8 +9,12 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Uuids;
 import org.jetbrains.annotations.NotNull;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentRegistry;
+import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
+import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.amymialee.elegantarmour.cca.ArmourComponent;
@@ -28,14 +27,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ElegantArmour implements ModInitializer, EntityComponentInitializer {
     public static final String MOD_ID = "elegantarmour";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static final Identifier CLIENT_UPDATE = id("client_update");
-    public static final Identifier CLIENT_INIT_QUERY = id("client_init_query");
-    public static final ComponentKey<ArmourComponent> ARMOUR = ComponentRegistry.getOrCreate(id("armour"), ArmourComponent.class);
     public static final Map<UUID, Optional<PacketByteBuf>> PENDING_INITIALISATIONS = new ConcurrentHashMap<>();
 
     @Override
     public void onInitialize() {
-        ServerPlayNetworking.registerGlobalReceiver(CLIENT_UPDATE, (server, player, networkHandler, buf, sender) -> ArmourComponent.handleClientUpdate(player, buf));
         ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> {
             sender.sendPacket(CLIENT_INIT_QUERY, PacketByteBufs.create());
         });
@@ -64,8 +59,8 @@ public class ElegantArmour implements ModInitializer, EntityComponentInitializer
     }
 
     @Override
-    public void registerEntityComponentFactories(@NotNull EntityComponentFactoryRegistry registry) {
-        registry.beginRegistration(PlayerEntity.class, ARMOUR).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(ArmourComponent::new);
+    public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
+        registry.beginRegistration(PlayerEntity.class, ArmourComponent.KEY).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(ArmourComponent::new);
     }
 
     public static @NotNull Identifier id(String path) {

@@ -23,6 +23,7 @@ import xyz.amymialee.elegantarmour.ElegantArmourConfig;
 import xyz.amymialee.elegantarmour.client.ElegantMenuWidget;
 import xyz.amymialee.elegantarmour.client.ElegantOptionsScreen;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -46,13 +47,11 @@ public class SocialInteractionsPlayerListEntryMixin {
         }
         this.elegantButton = new ElegantMenuWidget(0, 0, Text.translatable("options.elegantCustomisation"), button -> client.setScreen(new ElegantOptionsScreen(parent, player, data)), player != null && ElegantArmour.ARMOUR.get(player).hasMod);
         this.elegantButton.setTooltip(Tooltip.of(Text.translatable("options.elegantCustomisation")));
-        this.elegantButton.setTooltipDelay(10);
         this.elegantButton.active = true;
         this.buttons.add(this.elegantButton);
         if (player == client.player) {
             this.defaultButton = new ElegantMenuWidget(0, 0, Text.translatable("options.elegantDefault"), button -> client.setScreen(new ElegantOptionsScreen(parent, null, ElegantArmourConfig.defaultSettings)), false);
             this.defaultButton.setTooltip(Tooltip.of(Text.translatable("options.elegantDefault")));
-            this.defaultButton.setTooltipDelay(10);
             this.defaultButton.active = true;
             this.buttons.add(this.defaultButton);
         }

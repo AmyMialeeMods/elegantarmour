@@ -1,26 +1,37 @@
 package xyz.amymialee.elegantarmour.cca;
 
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentRegistry;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import xyz.amymialee.elegantarmour.ElegantArmour;
 import xyz.amymialee.elegantarmour.ElegantArmourConfig;
 import xyz.amymialee.elegantarmour.util.ElegantPlayerData;
 import xyz.amymialee.elegantarmour.util.ElegantState;
 
 public class ArmourComponent implements AutoSyncedComponent {
+	public static final ComponentKey<ArmourComponent> KEY = ComponentRegistry.getOrCreate(ElegantArmour.id("armour"), ArmourComponent.class);
 	public boolean hasMod;
 	public final ElegantPlayerData data;
+	public final PlayerEntity player;
 
-	public ArmourComponent(PlayerEntity player) {
-		this.data = new ElegantPlayerData("");
+	public ArmourComponent(@NotNull PlayerEntity player) {
+		this.player = player;
+		this.data = new ElegantPlayerData(player.getNameForScoreboard());
+	}
+
+	public void sync() {
+		KEY.sync(this.player);
 	}
 
 	@Override
-	public void readFromNbt(@NotNull NbtCompound tag) {
+	public void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
 		this.data.setHeadState(ElegantState.values()[tag.getInt("headState")]);
 		this.data.setChestState(ElegantState.values()[tag.getInt("chestState")]);
 		this.data.setLegsState(ElegantState.values()[tag.getInt("legsState")]);
@@ -31,7 +42,7 @@ public class ArmourComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void writeToNbt(@NotNull NbtCompound tag) {
+	public void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
 		tag.putInt("headState", this.data.getHeadState().ordinal());
 		tag.putInt("chestState", this.data.getChestState().ordinal());
 		tag.putInt("legsState", this.data.getLegsState().ordinal());
@@ -41,26 +52,19 @@ public class ArmourComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void applySyncPacket(PacketByteBuf buf) {
+	public void applySyncPacket(RegistryByteBuf buf) {
 		this.data.setFromBuf(buf);
 		this.hasMod = buf.readBoolean();
 	}
 
 	@Override
-	public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity player) {
+	public void writeSyncPacket(RegistryByteBuf buf, ServerPlayerEntity player) {
 		this.data.writeToBuf(buf);
 		buf.writeBoolean(this.hasMod);
 	}
 
-	public static void handleClientUpdate(ServerPlayerEntity serverPlayerEntity, PacketByteBuf buf) {
-        var component = ElegantArmour.ARMOUR.get(serverPlayerEntity);
-		component.data.setFromBuf(buf);
-		component.hasMod = true; // if we've received a client update packet, we know the player has the mod
-		ElegantArmour.ARMOUR.sync(serverPlayerEntity);
-	}
-
 	public static void handleInit(PlayerEntity player) {
-		var component = ElegantArmour.ARMOUR.get(player);
+		var component = KEY.get(player);
 		if (player.getWorld().isClient()) {
 			if (ElegantArmourConfig.playerData.containsKey(player.getUuid())) {
 				component.data.setFrom(ElegantArmourConfig.playerData.get(player.getUuid()));
