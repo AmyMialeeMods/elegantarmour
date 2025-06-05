@@ -1,138 +1,49 @@
 package xyz.amymialee.elegantarmour.util;
 
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.network.PacketByteBuf;
+import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
 
 public class ElegantPlayerData {
-    private String playerName;
-    private ElegantState headState = ElegantState.DEFAULT;
-    private ElegantState chestState = ElegantState.DEFAULT;
-    private ElegantState legsState = ElegantState.DEFAULT;
-    private ElegantState feetState = ElegantState.DEFAULT;
-    private ElegantState elytraState = ElegantState.DEFAULT;
-    private ElegantState smallArmourState = ElegantState.DEFAULT;
+    public String playerName;
+    public ElegantMode head = ElegantMode.DEFAULT;
+    public ElegantMode chest = ElegantMode.DEFAULT;
+    public ElegantMode legs = ElegantMode.DEFAULT;
+    public ElegantMode feet = ElegantMode.DEFAULT;
+    public ElegantMode elytra = ElegantMode.DEFAULT;
+    public ElegantMode hat = ElegantMode.DEFAULT;
 
     public ElegantPlayerData(String playerName) {
         this.playerName = playerName;
     }
 
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
-    }
-
-    public String getPlayerName() {
-        return this.playerName;
-    }
-
-    public ElegantState getState(int index) {
-        return switch (index) {
-            case 0 -> this.headState;
-            case 1 -> this.chestState;
-            case 2 -> this.legsState;
-            case 3 -> this.feetState;
-            case 4 -> this.elytraState;
-            case 5 -> this.smallArmourState;
-            default -> ElegantState.DEFAULT;
-        };
-    }
-
-    public void setState(int index, ElegantState state) {
-        switch (index) {
-            case 0 -> this.headState = state;
-            case 1 -> this.chestState = state;
-            case 2 -> this.legsState = state;
-            case 3 -> this.feetState = state;
-            case 4 -> this.elytraState = state;
-            case 5 -> this.smallArmourState = state;
-        }
-    }
-
-    public ElegantState getState(@NotNull EquipmentSlot slot) {
+    public ElegantMode get(ElegantSlot slot) {
         return switch (slot) {
-            case HEAD -> this.headState;
-            case CHEST -> this.chestState;
-            case LEGS -> this.legsState;
-            case FEET -> this.feetState;
-            default -> ElegantState.DEFAULT;
+            case HEAD -> this.head;
+            case CHEST -> this.chest;
+            case LEGS -> this.legs;
+            case FEET -> this.feet;
+            case ELYTRA -> this.elytra;
+            case HAT -> this.hat;
         };
     }
 
-    public void setFromBytes(byte head, byte chest, byte legs, byte feet, byte elytra, byte smallArmour) {
-        this.setHeadState(ElegantState.values()[head]);
-        this.setChestState(ElegantState.values()[chest]);
-        this.setLegsState(ElegantState.values()[legs]);
-        this.setFeetState(ElegantState.values()[feet]);
-        this.setElytraState(ElegantState.values()[elytra]);
-        this.setSmallArmourState(ElegantState.values()[smallArmour]);
+    public ElegantPlayerData(@NotNull JsonObject json) {
+        this.playerName = json.get("name").getAsString();
+        this.head = ElegantMode.valueOf(json.get("head").getAsString());
+        this.chest = ElegantMode.valueOf(json.get("chest").getAsString());
+        this.legs = ElegantMode.valueOf(json.get("legs").getAsString());
+        this.feet = ElegantMode.valueOf(json.get("feet").getAsString());
+        this.elytra = ElegantMode.valueOf(json.get("elytraState").getAsString());
+        this.hat = ElegantMode.valueOf(json.get("hideHat").getAsString());
     }
 
-    public byte[] writeToBytes() {
-        var bytes = new byte[6];
-        bytes[0] = (byte) this.getHeadState().ordinal();
-        bytes[1] = (byte) this.getChestState().ordinal();
-        bytes[2] = (byte) this.getLegsState().ordinal();
-        bytes[3] = (byte) this.getFeetState().ordinal();
-        bytes[4] = (byte) this.getElytraState().ordinal();
-        bytes[5] = (byte) this.getSmallArmourState().ordinal();
-        return bytes;
-    }
-
-    public ElegantState getHeadState() {
-        return this.headState;
-    }
-
-    public void setHeadState(ElegantState headState) {
-        this.headState = headState;
-    }
-
-    public ElegantState getChestState() {
-        return this.chestState;
-    }
-
-    public void setChestState(ElegantState chestState) {
-        this.chestState = chestState;
-    }
-
-    public ElegantState getLegsState() {
-        return this.legsState;
-    }
-
-    public void setLegsState(ElegantState legsState) {
-        this.legsState = legsState;
-    }
-
-    public ElegantState getFeetState() {
-        return this.feetState;
-    }
-
-    public void setFeetState(ElegantState feetState) {
-        this.feetState = feetState;
-    }
-
-    public ElegantState getElytraState() {
-        return this.elytraState;
-    }
-
-    public void setElytraState(ElegantState elytraState) {
-        this.elytraState = elytraState;
-    }
-
-    public ElegantState getSmallArmourState() {
-        return this.smallArmourState;
-    }
-
-    public void setSmallArmourState(ElegantState smallArmourState) {
-        this.smallArmourState = smallArmourState;
-    }
-
-    public void setFrom(ElegantPlayerData elegantPlayerData) {
-        this.playerName = elegantPlayerData.playerName;
-        this.headState = elegantPlayerData.headState;
-        this.chestState = elegantPlayerData.chestState;
-        this.legsState = elegantPlayerData.legsState;
-        this.feetState = elegantPlayerData.feetState;
-        this.elytraState = elegantPlayerData.elytraState;
-        this.smallArmourState = elegantPlayerData.smallArmourState;
+    public void writeToJson(@NotNull JsonObject json) {
+        json.addProperty("name", this.playerName);
+        json.addProperty("head", this.head.name());
+        json.addProperty("chest", this.chest.name());
+        json.addProperty("legs", this.legs.name());
+        json.addProperty("feet", this.feet.name());
+        json.addProperty("elytraState", this.elytra.name());
+        json.addProperty("hideHat", this.hat.name());
     }
 }

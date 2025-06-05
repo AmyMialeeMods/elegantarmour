@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
     @WrapOperation(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;isConnectedToServer()Z"))
-    private boolean elegantArmour$allowMenu(MinecraftClient client, Operation<Boolean> operation) {
+    private boolean elegantarmour$allowMenu(MinecraftClient client, Operation<Boolean> operation) {
         return true;
     }
 }

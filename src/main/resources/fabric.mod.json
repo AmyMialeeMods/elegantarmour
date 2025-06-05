@@ -2,19 +2,29 @@
   "schemaVersion": 1,
   "id": "elegantarmour",
   "version": "${version}",
-  "name": "elegantarmour",
+
+  "name": "Elegant Armour",
   "description": "An elegant way of hiding you and your friends equipment.",
   "authors": [
     "AmyMialee",
-    "SillviaTV"
+    "SillviaTV",
+    "jellyjasby"
   ],
   "contact": {
-    "repo": "https://github.com/AmyMialeeMods/elegantarmour"
+    "email": "elegantarmour@amymialee.xyz",
+    "homepage": "https://amymialee.xyz",
+    "irc": "",
+    "sources": "https://github.com/AmyMialeeMods/elegantarmour",
+    "issues": "https://github.com/AmyMialeeMods/elegantarmour/issues"
   },
   "license": "All-Rights-Reserved",
   "icon": "assets/elegantarmour/icon.png",
+
   "environment": "*",
   "entrypoints": {
+    "fabric-datagen": [
+      "xyz.amymialee.elegantarmour.ElegantArmourDataGen"
+    ],
     "client": [
       "xyz.amymialee.elegantarmour.ElegantArmourClient"
     ],
@@ -29,12 +39,25 @@
   "mixins": [
     "elegantarmour.mixins.json"
   ],
-  "custom": {
-    "cardinal-components": [
-      "elegantarmour:armour"
-    ]
-  },
+
   "depends": {
     "fabric": "*"
+  },
+
+  "custom": {
+    "cardinal-components": [
+      "elegantarmour:elegant"
+    ],
+    "modmenu": {
+      "links": {
+        "modmenu.curseforge": "https://www.curseforge.com/minecraft/mc-mods/elegantarmour",
+        "modmenu.discord": "https://discord.com/invite/P4dUsxv6An",
+        "modmenu.kofi": "https://ko-fi.com/amymialee",
+        "modmenu.modrinth": "https://modrinth.com/project/elegantarmour",
+        "modmenu.twitter": "https://x.com/amy_mialee",
+        "modmenu.wiki": "https://modrinth.com/project/elegantarmour"
+      },
+      "update_checker": true
+    }
   }
 }

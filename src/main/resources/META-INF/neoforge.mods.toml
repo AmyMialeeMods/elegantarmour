@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="*"
+license="ARR"
+
+[properties]
+"connector:placeholder"=true
+
+[[mods]]
+modId="elegantarmour"
+version="${version}"
+displayName="Elegant Armour"
+authors="AmyMialee"
+description='''An elegant way of hiding you and your friends equipment.'''
+
+[[dependencies.elegantarmour]]
+modId="minecraft"
+mandatory=true
+versionRange="*"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.elegantarmour]]
+modId="connector"
+mandatory=true
+versionRange="*"
+ordering="NONE"
+side="BOTH"

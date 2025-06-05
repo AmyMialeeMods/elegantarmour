@@ -22,8 +22,8 @@ import xyz.amymialee.elegantarmour.ElegantArmour;
 import xyz.amymialee.elegantarmour.ElegantArmourConfig;
 import xyz.amymialee.elegantarmour.client.ElegantMenuWidget;
 import xyz.amymialee.elegantarmour.client.ElegantOptionsScreen;
+import xyz.amymialee.elegantarmour.util.ElegantPlayerData;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -36,29 +36,22 @@ public class SocialInteractionsPlayerListEntryMixin {
     @Unique private ButtonWidget defaultButton;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void elegantArmour$button(MinecraftClient client, SocialInteractionsScreen parent, UUID uuid, String name, Supplier<Identifier> skinTexture, boolean reportable, CallbackInfo ci) {
+    private void elegantarmour$button(MinecraftClient client, SocialInteractionsScreen parent, UUID uuid, String name, Supplier<Identifier> skinTexture, boolean reportable, CallbackInfo ci) {
         if (this.buttons.isEmpty()) this.buttons = new ArrayList<>();
-        var data = ElegantArmourConfig.getOrCreate(uuid, name);
-        PlayerEntity player;
-        if (client.world != null) {
-            player = client.world.getPlayerByUuid(uuid);
-        } else {
-            player = null;
-        }
-        this.elegantButton = new ElegantMenuWidget(0, 0, Text.translatable("options.elegantCustomisation"), button -> client.setScreen(new ElegantOptionsScreen(parent, player, data)), player != null && ElegantArmour.ARMOUR.get(player).hasMod);
-        this.elegantButton.setTooltip(Tooltip.of(Text.translatable("options.elegantCustomisation")));
+        this.elegantButton = new ElegantMenuWidget(0, 0, Text.translatable("%s.player".formatted(ElegantArmour.MOD_ID)), button -> client.setScreen(new ElegantOptionsScreen(parent, ElegantArmourConfig.playerOverrides.computeIfAbsent(uuid, id -> new ElegantPlayerData(name)))));
+        this.elegantButton.setTooltip(Tooltip.of(Text.translatable("%s.player".formatted(ElegantArmour.MOD_ID))));
         this.elegantButton.active = true;
         this.buttons.add(this.elegantButton);
-        if (player == client.player) {
-            this.defaultButton = new ElegantMenuWidget(0, 0, Text.translatable("options.elegantDefault"), button -> client.setScreen(new ElegantOptionsScreen(parent, null, ElegantArmourConfig.defaultSettings)), false);
-            this.defaultButton.setTooltip(Tooltip.of(Text.translatable("options.elegantDefault")));
+        if (client.world != null && client.player == client.world.getPlayerByUuid(uuid)) {
+            this.defaultButton = new ElegantMenuWidget(0, 0, Text.translatable("%s.universal".formatted(ElegantArmour.MOD_ID)), button -> client.setScreen(new ElegantOptionsScreen(parent, ElegantArmourConfig.universalOverride)));
+            this.defaultButton.setTooltip(Tooltip.of(Text.translatable("%s.universal".formatted(ElegantArmour.MOD_ID))));
             this.defaultButton.active = true;
             this.buttons.add(this.defaultButton);
         }
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    private void elegantArmour$renderButton(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta, CallbackInfo ci) {
+    private void elegantarmour$renderButton(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta, CallbackInfo ci) {
         if (this.elegantButton != null) {
             this.elegantButton.setX(x + (entryWidth - 60 - 12));
             this.elegantButton.setY(y + (entryHeight - 20) / 2);

@@ -2,17 +2,15 @@
   "required": true,
   "minVersion": "0.8",
   "package": "xyz.amymialee.elegantarmour.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
   ],
   "client": [
     "ArmorFeatureRendererMixin",
-    "CapeFeatureRendererMixin",
     "ElytraFeatureRendererMixin",
     "HeadFeatureRendererMixin",
     "MinecraftClientMixin",
     "OptionsScreenMixin",
-    "PlayerEntityRendererMixin",
     "SocialInteractionsPlayerListEntryMixin"
   ],
   "injectors": {
