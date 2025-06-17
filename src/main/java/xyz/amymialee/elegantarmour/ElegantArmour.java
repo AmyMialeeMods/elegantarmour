@@ -14,6 +14,8 @@ public class ElegantArmour implements ModInitializer, EntityComponentInitializer
     public static final String MOD_ID = "elegantarmour";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
+    public static boolean modEnabled = true;
+
     @Override
     public void onInitialize() {
         //TODO: Syncing

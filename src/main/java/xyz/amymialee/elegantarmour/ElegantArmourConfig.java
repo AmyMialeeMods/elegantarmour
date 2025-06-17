@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.client.MinecraftClient;
+import net.fabricmc.loader.api.FabricLoader;
 import xyz.amymialee.elegantarmour.util.ElegantPlayerData;
 
 import java.io.File;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ElegantArmourConfig {
-    private static final File optionsFile = new File(MinecraftClient.getInstance().runDirectory, "config/elegantarmour.json");
+    private static final File optionsFile = new File(FabricLoader.getInstance().getConfigDir().toFile(), "elegantarmour.json");
     public static ElegantPlayerData universalOverride = new ElegantPlayerData("$Universal");
     public static Map<UUID, ElegantPlayerData> playerOverrides = new HashMap<>();
 

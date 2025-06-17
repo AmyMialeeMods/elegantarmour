@@ -4,11 +4,15 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
 import org.jetbrains.annotations.NotNull;
 import xyz.amymialee.elegantarmour.ElegantArmour;
 import xyz.amymialee.elegantarmour.ElegantArmourConfig;
@@ -30,6 +34,8 @@ public class ElegantOptionsScreen extends Screen {
     private static final Identifier FEET = ElegantArmour.id("feet");
     private static final Identifier ELYTRA = ElegantArmour.id("elytra");
 
+    private static final Identifier BETA = ElegantArmour.id("beta");
+
     public ElegantOptionsScreen(Screen parent, @NotNull ElegantPlayerData data) {
         super(Text.literal(data.playerName));
         this.parent = parent;
@@ -46,6 +52,8 @@ public class ElegantOptionsScreen extends Screen {
 //        this.addButtons(isClientPlayer, this.y + 19 + 3 * 18, ElegantIcons.BOOTS, "options.elegantarmour.feet");
 //        this.addButtons(isClientPlayer, this.y + 19 + 4 * 18, ElegantIcons.ELYTRA, "options.elegantarmour.elytra");
 //        this.addButtons(this.y + 19 + 5 * 18, ElegantIcons.SMALL, "options.elegantarmour.small", true);
+        this.addDrawableChild(ButtonWidget.builder(Text.literal("toggle mod"), button -> ElegantArmour.modEnabled = !ElegantArmour.modEnabled)
+                .dimensions(this.x + 120, this.y + 55, 90, 40).build());
     }
 
     @Override
@@ -63,6 +71,18 @@ public class ElegantOptionsScreen extends Screen {
             this.player.equipStack(EquipmentSlot.FEET, Items.IRON_BOOTS.getDefaultStack());
         }
         if (this.player != null) InventoryScreen.drawEntity(context, this.x + 9, this.y + 10, this.x + 69, this.y + 136, 46, 0.075F, mouseX, mouseY + 24f, this.player);
+        context.getMatrices().push();
+        context.getMatrices().translate(MathHelper.sin(Util.getMeasuringTimeMs() / 320f) * 8, -MathHelper.cos(Util.getMeasuringTimeMs() / 320f) * 8, 0);
+        context.getMatrices().translate(133.0F, -9.0F, 0.0F);
+        var f = 1.8F - MathHelper.abs(MathHelper.sin((float)(Util.getMeasuringTimeMs() % 1000L) / 1000.0F * (float) (Math.PI * 2)) * 0.1F);
+        f *= 0.4f;
+        context.getMatrices().translate(this.x, this.y, 0.0F);
+        context.getMatrices().translate(198 / 2f, -44 / 2f, 0.0F);
+        context.getMatrices().scale(f, f, f);
+        context.getMatrices().translate(-198 / 2f, 44 / 2f, 0.0F);
+        context.getMatrices().multiply(RotationAxis.POSITIVE_Z.rotationDegrees(20.0F));
+        context.drawGuiTexture(BETA, 0, 0, 198, 44);
+        context.getMatrices().pop();
     }
 
     @Override

@@ -26,11 +26,9 @@ public class ElegantComponent implements AutoSyncedComponent {
 	public ElegantComponent(@NotNull PlayerEntity player) {
 		this.player = player;
 		var gameProfile = player.getGameProfile();
-		if (gameProfile == null) {
-			gameProfile = new GameProfile(UUID.randomUUID(), "Dev");
-		}
+		if (gameProfile == null) gameProfile = new GameProfile(UUID.randomUUID(), "Dev");
 		this.playerPreferences = new ElegantPlayerData(gameProfile.getName());
-		GameProfile finalGameProfile = gameProfile;
+        var finalGameProfile = gameProfile;
 		this.playerOverrides = ElegantArmourConfig.playerOverrides.computeIfAbsent(player.getUuid(), uuid -> new ElegantPlayerData(finalGameProfile.getName()));
 	}
 
@@ -39,12 +37,14 @@ public class ElegantComponent implements AutoSyncedComponent {
 	}
 
 	public ElegantMode getMode(EquipmentSlot slot) {
-		return this.getMode(ElegantSlot.get(slot));
+		return ElegantArmour.modEnabled ? ElegantMode.SLIM : ElegantMode.DEFAULT;
+//		return this.getMode(ElegantSlot.get(slot));
 	}
 
 	public ElegantMode getMode(ElegantSlot slot) {
-		if (this.playerOverrides.get(slot) != ElegantMode.DEFAULT) return this.playerOverrides.get(slot);
-		return this.playerPreferences.get(slot);
+		return ElegantArmour.modEnabled ? ElegantMode.SLIM : ElegantMode.DEFAULT;
+//		if (this.playerOverrides.get(slot) != ElegantMode.DEFAULT) return this.playerOverrides.get(slot);
+//		return this.playerPreferences.get(slot);
 	}
 
 	@Override
